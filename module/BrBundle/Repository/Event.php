@@ -56,6 +56,21 @@ class Event extends EntityRepository
         return $resultSet;
     }
 
+    public function findAllOldQuery()
+    {
+        $query = $this->getEntityManager()->createQueryBuilder();
+        $resultSet = $query->select('r')
+            ->from('BrBundle\Entity\Event', 'r')
+            ->where(
+                $query->expr()->lte('r.endDate', ':start')
+            )
+            ->setParameter('start', new DateTime())
+            ->orderBy('r.startDate')
+            ->getQuery();
+
+        return $resultSet;
+    }
+
     public function findAllByDatesQuery(DateTime $start, DateTime $end)
     {
         $query = $this->getEntityManager()->createQueryBuilder();
