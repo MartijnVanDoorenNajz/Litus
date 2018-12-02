@@ -40,6 +40,9 @@ return array(
     'No'                                           => 'No',
     'Number Member'                                => 'Number Member',
     'Number Non Member'                            => 'Number Non Member',
+    'R-number'                                     => 'R-number',
+    'Guest tickets'                                => 'Guest tickets',
+    'Your ticket'                                  => 'Your ticket',
 
     'The tickets were succesfully booked'     => 'The tickets were succesfully booked',
     'There were not enough tickets available' => 'There were not enough tickets available',

@@ -20,10 +20,10 @@
 
 namespace TicketBundle\Controller;
 
-use TicketBundle\Component\Ticket\Ticket as TicketBook;
-use TicketBundle\Entity\Event;
-use TicketBundle\Entity\Ticket;
-use Zend\View\Model\ViewModel;
+use TicketBundle\Component\Ticket\Ticket as TicketBook,
+    TicketBundle\Entity\Event,
+    TicketBundle\Entity\Ticket,
+    Zend\View\Model\ViewModel;
 
 /**
  * TicketController
@@ -34,83 +34,121 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
 {
     public function eventAction()
     {
-        $event = $this->getEventEntity();
-        if ($event === null) {
+
+        if (!($event = $this->getEventEntity())) {
             return $this->notFoundAction();
         }
 
-        $person = $this->getPersonEntity();
-        if ($person === null) {
+        if (!($person = $this->getPersonEntity())) {
             return $this->notFoundAction();
         }
 
-        $tickets = $this->getEntityManager()
-            ->getRepository('TicketBundle\Entity\Ticket')
-            ->findAllByEventAndPerson($event, $person);
+        $currentYear = $this->getCurrentAcademicYear();
 
-        $form = $this->getForm('ticket_ticket_book', array('event' => $event, 'person' => $person));
+        $form = $this->getForm('ticket_ticket_book', array('event' => $event, 'person' => $person, 'currentYear' => $currentYear));
 
         if ($this->getRequest()->isPost()) {
             $form->setData($this->getRequest()->getPost());
 
+            $hydrator = $form->getHydrator();
+            $hydrator->setEvent($event);
+            $hydrator->setPerson($person);
+            $hydrator->setCurrentYear($currentYear);
+
             if ($form->isValid()) {
-                $formData = $form->getData();
+                if($order = $form->hydrateObject()){
+                    $this->getEntityManager()->persist($order);
+                    $this->getEntityManager()->flush();
 
-                $numbers = array(
-                    'member'     => $formData['number_member'] ?? 0,
-                    'non_member' => $formData['number_non_member'] ?? 0,
-                );
+                    $this->flashMessenger()->success(
+                        'Success',
+                        'The tickets were succesfully booked'
+                    );
 
-                foreach ($event->getOptions() as $option) {
-                    $numbers['option_' . $option->getId() . '_number_member'] = $formData['option_' . $option->getId() . '_number_member'];
-                    $numbers['option_' . $option->getId() . '_number_non_member'] = $formData['option_' . $option->getId() . '_number_non_member'];
+                    $this->redirect()->toRoute(
+                        'ticket',
+                        array(
+                            'action' => 'event',
+                            'id'     => $event->getId(),
+                        )
+                    );
                 }
-
-                TicketBook::book(
-                    $event,
-                    $numbers,
-                    false,
-                    $this->getEntityManager(),
-                    $person,
-                    null
-                );
-
-                $this->getEntityManager()->flush();
-
-                $this->flashMessenger()->success(
-                    'Success',
-                    'The tickets were succesfully booked'
-                );
-
-                $this->redirect()->toRoute(
-                    'ticket',
-                    array(
-                        'action' => 'event',
-                        'id'     => $event->getId(),
-                    )
-                );
             }
+
         }
 
-        $organizationStatus = $person->getOrganizationStatus($this->getCurrentAcademicYear());
+        return new ViewModel(array(
+           'form'   => $form,
+           'event'  => $event,
+           'person' => $person,
+        ));
 
-        return new ViewModel(
-            array(
-                'event'                 => $event,
-                'tickets'               => $tickets,
-                'form'                  => $form,
-                'canRemoveReservations' => $event->canRemoveReservation($this->getEntityManager()),
-                'isPraesidium'          => $organizationStatus ? $organizationStatus->getStatus() == 'praesidium' : false,
-            )
-        );
+//        $tickets = $this->getEntityManager()
+//            ->getRepository('TicketBundle\Entity\Ticket')
+//            ->findAllByEventAndPerson($event, $person);
+//
+//        $form = $this->getForm('ticket_ticket_book', array('event' => $event, 'person' => $person));
+//
+//        if ($this->getRequest()->isPost()) {
+//            $form->setData($this->getRequest()->getPost());
+//
+//            if ($form->isValid()) {
+//                $formData = $form->getData();
+//
+//                $numbers = array(
+//                    'member'     => isset($formData['number_member']) ? $formData['number_member'] : 0,
+//                    'non_member' => isset($formData['number_non_member']) ? $formData['number_non_member'] : 0,
+//                );
+//
+//                foreach ($event->getOptions() as $option) {
+//                    $numbers['option_' . $option->getId() . '_number_member'] = $formData['option_' . $option->getId() . '_number_member'];
+//                    $numbers['option_' . $option->getId() . '_number_non_member'] = $formData['option_' . $option->getId() . '_number_non_member'];
+//                }
+//
+//                TicketBook::book(
+//                    $event,
+//                    $numbers,
+//                    false,
+//                    $this->getEntityManager(),
+//                    $person,
+//                    null
+//                );
+//
+//                $this->getEntityManager()->flush();
+//
+//                $this->flashMessenger()->success(
+//                    'Success',
+//                    'The tickets were succesfully booked'
+//                );
+//
+//                $this->redirect()->toRoute(
+//                    'ticket',
+//                    array(
+//                        'action' => 'event',
+//                        'id'     => $event->getId(),
+//                    )
+//                );
+//            }
+//        }
+//
+//        $organizationStatus = $person->getOrganizationStatus($this->getCurrentAcademicYear());
+//
+//        return new ViewModel(
+//            array(
+//                'event'                 => $event,
+//                'tickets'               => $tickets,
+//                'form'                  => $form,
+//                'canRemoveReservations' => $event->canRemoveReservation($this->getEntityManager()),
+//                'isPraesidium'          => $organizationStatus ? $organizationStatus->getStatus() == 'praesidium' : false,
+//            )
+//        );
     }
 
     public function deleteAction()
     {
         $this->initAjax();
 
-        $ticket = $this->getTicketEntity();
-        if ($ticket === null) {
+        if (!($ticket = $this->getTicketEntity())) {
             return $this->notFoundAction();
         }
 
@@ -135,7 +173,7 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
     private function getPersonEntity()
     {
         if (!$this->getAuthentication()->isAuthenticated()) {
-            return;
+            return null;
         }
 
         return $this->getAuthentication()->getPersonObject();
@@ -149,7 +187,7 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
         $event = $this->getEntityById('TicketBundle\Entity\Event');
 
         if (!($event instanceof Event) || !$event->isActive()) {
-            return;
+            return null;
         }
 
         return $event;
@@ -160,15 +198,14 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
      */
     private function getTicketEntity()
     {
-        $person = $this->getPersonEntity();
-        if ($person === null) {
-            return;
+        if (!($person = $this->getPersonEntity())) {
+            return null;
         }
 
         $ticket = $this->getEntityById('TicketBundle\Entity\Ticket');
 
         if (!($ticket instanceof Ticket) || $ticket->getPerson() != $person) {
-            return;
+            return null;
         }
 
         return $ticket;

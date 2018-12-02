@@ -20,8 +20,9 @@
 
 namespace TicketBundle\Controller\Admin;
 
-use TicketBundle\Entity\Event;
-use Zend\View\Model\ViewModel;
+use TicketBundle\Entity\Event,
+    Zend\View\Model\ViewModel,
+    CommonBundle\Entity\User\Status\Organization as OrganizationStatus;
 
 /**
  * EventController
@@ -73,6 +74,7 @@ class EventController extends \CommonBundle\Component\Controller\ActionControlle
 
             if ($form->isValid()) {
                 $event = $form->hydrateObject();
+                $event->setActive(true);
 
                 $this->getEntityManager()->persist($event);
                 $this->getEntityManager()->flush();
@@ -102,8 +104,7 @@ class EventController extends \CommonBundle\Component\Controller\ActionControlle
 
     public function editAction()
     {
-        $event = $this->getEventEntity();
-        if ($event === null) {
+        if (!($event = $this->getEventEntity())) {
             return new ViewModel();
         }
 
@@ -144,8 +145,7 @@ class EventController extends \CommonBundle\Component\Controller\ActionControlle
     {
         $this->initAjax();
 
-        $event = $this->getEventEntity();
-        if ($event === null) {
+        if (!($event = $this->getEventEntity())) {
             return new ViewModel();
         }
 

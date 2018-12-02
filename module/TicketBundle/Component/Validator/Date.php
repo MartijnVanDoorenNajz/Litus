@@ -23,11 +23,11 @@ namespace TicketBundle\Component\Validator;
 use DateTime;
 
 /**
- * Check the bookings close date is not after the event's date.
+ * Check the booking close date is not after the event's date
  *
  * @author Kristof Mariën <kristof.marien@litus.cc>
  */
-class BookingsCloseDate extends \CommonBundle\Component\Validator\AbstractValidator
+class Date extends \CommonBundle\Component\Validator\AbstractValidator
 {
     const NOT_VALID = 'notValid';
 
@@ -41,13 +41,13 @@ class BookingsCloseDate extends \CommonBundle\Component\Validator\AbstractValida
      * @var array
      */
     protected $messageTemplates = array(
-        self::NOT_VALID => 'The bookings close date cannot be after the event',
+        self::NOT_VALID => 'The booking close date cannot be after the event',
     );
 
     /**
      * Sets validator options
      *
-     * @param integer|array|\Traversable $options
+     * @param int|array|\Traversable $options
      */
     public function __construct($options = array())
     {
@@ -75,11 +75,11 @@ class BookingsCloseDate extends \CommonBundle\Component\Validator\AbstractValida
             return false;
         }
 
-        $event = $this->getEntityManager()
+        $activity = $this->getEntityManager()
             ->getRepository('CalendarBundle\Entity\Node\Event')
             ->findOneById($context['event']);
 
-        if ($event === null || $event->getStartDate() >= DateTime::createFromFormat($this->options['format'], $value)) {
+        if (null === $activity || $activity->getStartDate() >= DateTime::createFromFormat($this->options['format'], $value)) {
             return true;
         }
 

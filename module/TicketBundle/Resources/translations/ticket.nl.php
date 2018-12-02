@@ -40,6 +40,9 @@ return array(
     'No'                                           => 'Neen',
     'Number Member'                                => 'Aantal Lid',
     'Number Non Member'                            => 'Aantal Geen Lid',
+    'R-number'                                     => 'R-nummer',
+    'Guest tickets'                                => 'Gasten tickets',
+    'Your ticket'                                 => 'Jouw ticket',
 
     'The tickets were succesfully booked'     => 'De tickets zijn succesvol gereserveerd',
     'There were not enough tickets available' => 'Er waren onvoldoende tickets beschikbaar',

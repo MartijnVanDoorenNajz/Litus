@@ -19,5 +19,5 @@
  */
 
 return array(
-    'install_ticket' => 'TicketBundle\Command\Install',
+    'install.ticked' => 'TicketBundle\Command\Install',
 );
