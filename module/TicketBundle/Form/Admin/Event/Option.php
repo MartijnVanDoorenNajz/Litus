@@ -20,16 +20,15 @@
 
 namespace TicketBundle\Form\Admin\Event;
 
-use CommonBundle\Component\Form\Fieldset,
-    TicketBundle\Form\Admin\Event\Add as AddForm,
-    Zend\InputFilter\InputFilterProviderInterface;
+use TicketBundle\Form\Admin\Event\Add as AddForm;
+use Zend\InputFilter\InputFilterProviderInterface;
 
 /**
  * Add Option
  *
  * @author Kristof Mariën <kristof.marien@litus.cc>
  */
-class Option extends Fieldset implements InputFilterProviderInterface
+class Option extends \CommonBundle\Component\Form\Fieldset implements InputFilterProviderInterface
 {
     public function init()
     {
@@ -37,72 +36,84 @@ class Option extends Fieldset implements InputFilterProviderInterface
 
         $this->setLabel(' ');
 
-        $this->add(array(
-            'type'      => 'fieldset',
-            'name'      => 'prices_ids',
-            'elements'  => Add::copyForAllCategories(array(
-                'type'     => 'hidden',
-                'name'     => 'prices_id',
-                'required' => false,
+        $this->add(
+            array(
+                'type'      => 'fieldset',
+                'name'      => 'prices_ids',
+                'elements'  => Add::copyForAllCategories(
+                    array(
+                        'type'     => 'hidden',
+                        'name'     => 'prices_id',
+                        'required' => false,
+                        'options'  => array(
+                            'input' => array(
+                                'filters' => array(
+                                    array('name' => 'StringTrim'),
+                                ),
+                                'validators' => array(
+                                    array(
+                                        'name' => 'int',
+                                    ),
+                                ),
+                            ),
+                        ),
+                    )
+                ),
+            )
+        );
+
+        $this->add(
+            array(
+                'type'     => 'text',
+                'name'     => 'name',
+                'label'    => 'Name',
+                'required' => true,
                 'options'  => array(
                     'input' => array(
                         'filters' => array(
                             array('name' => 'StringTrim'),
                         ),
-                        'validators' => array(
-                            array(
-                                'name' => 'int',
-                            ),
-                        ),
                     ),
                 ),
-            )),
-        ));
+            )
+        );
 
-        $this->add(array(
-            'type'     => 'text',
-            'name'     => 'name',
-            'label'    => 'Name',
-            'required' => true,
-            'options'  => array(
-                'input' => array(
-                    'filters' => array(
-                        array('name' => 'StringTrim'),
-                    ),
+        $this->add(
+            array(
+                'type'     => 'checkbox',
+                'name'     => 'same_price',
+                'label'    => 'All same price',
+                'required' => false,
+                'attributes' => array(
+                    'id'    => 'same_price',
+                    'value' => true,
                 ),
-            ),
-        ));
+            )
+        );
 
-        $this->add(array(
-            'type'     => 'checkbox',
-            'name'     => 'same_price',
-            'label'    => 'All same price',
-            'required' => false,
-            'attributes' => array(
-                'id'    => 'same_price',
-                'value' => true,
-            ),
-        ));
+        $this->add(
+            array(
+                'type'     => 'text',
+                'name'     => 'price',
+                'label'    => 'Price',
+                'required' => false,
+                'attributes' => array(
+                    'id' => 'price',
+                ),
+            )
+        );
 
-        $this->add(array(
-            'type'     => 'text',
-            'name'     => 'price',
-            'label'    => 'Price',
-            'required' => false,
-            'attributes' => array(
-                'id' => 'price',
-            ),
-        ));
-
-        foreach (AddForm::copyForAllCategories(array(
-            'type'     => 'text',
-            'name'     => 'price',
-            'label'    => 'Price',
-            'required' => false,
-            'attributes' => array(
-                'id' => 'price',
-            ),
-        )) as $element) {
+        foreach (AddForm::copyForAllCategories(
+            array(
+                'type'     => 'text',
+                'name'     => 'price',
+                'label'    => 'Price',
+                'required' => false,
+                'attributes' => array(
+                    'id' => 'price',
+                ),
+            )
+        ) as $element) {
             $this->add($element);
         }
 
@@ -178,8 +189,6 @@ class Option extends Fieldset implements InputFilterProviderInterface
 
     public function getInputFilterSpecification()
     {
-        $specs = parent::getInputFilterSpecification();
-
-        return $specs;
+        return parent::getInputFilterSpecification();
     }
 }

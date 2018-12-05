@@ -20,9 +20,8 @@
 
 namespace TicketBundle\Controller\Admin;
 
-use TicketBundle\Entity\Event,
-    Zend\View\Model\ViewModel,
-    CommonBundle\Entity\User\Status\Organization as OrganizationStatus;
+use TicketBundle\Entity\Event;
+use Zend\View\Model\ViewModel;
 
 /**
  * EventController

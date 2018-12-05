@@ -20,8 +20,8 @@
 
 namespace TicketBundle\Component\Controller;
 
-use Exception,
-    Zend\Mvc\MvcEvent;
+use Exception;
+use Zend\Mvc\MvcEvent;
 
 /**
  * We extend the CommonBundle controller.
@@ -42,7 +42,7 @@ class SaleController extends \CommonBundle\Component\Controller\ActionController
             ->getRepository('TicketBundle\Entity\Event')
             ->findOneById($this->getParam('id'));
 
-        if (null == $event) {
+        if ($event == null) {
             throw new Exception('No valid event is given');
         }
 

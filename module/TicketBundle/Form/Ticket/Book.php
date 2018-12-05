@@ -21,11 +21,10 @@
 namespace TicketBundle\Form\Ticket;
 
 use CommonBundle\Entity\General\AcademicYear;
-use CommonBundle\Entity\User\Person,
-    LogicException,
-    RuntimeException,
-    TicketBundle\Entity\Event;
-use TicketBundle\Entity\Category;
+use CommonBundle\Entity\User\Person;
+use LogicException;
+use RuntimeException;
+use TicketBundle\Entity\Event;
 
 /**
  * Book Tickets
@@ -55,7 +54,7 @@ class Book extends \CommonBundle\Component\Form\Bootstrap\Form
                 'type'      => 'select',
                 'name'      => 'options_select',
                 'label'     => 'Option',
-                'attributes'=> array(),
+                'attributes' => array(),
             ),
         ),
     );
@@ -81,10 +80,10 @@ class Book extends \CommonBundle\Component\Form\Bootstrap\Form
 
     public function init()
     {
-        if (null === $this->event) {
+        if ($this->event === null) {
             throw new LogicException('Cannot book ticket for null form.');
         }
-        if (null === $this->person) {
+        if ($this->person === null) {
             throw new RuntimeException('You have to be logged in to book tickets.');
         }
 
@@ -94,47 +93,52 @@ class Book extends \CommonBundle\Component\Form\Bootstrap\Form
 
         $status = $this->person->getOrganizationStatus($this->currentYear);
         $bookerCategory = $this->getCategory($status);
-        if (null === $bookerCategory) {
+        if ($bookerCategory === null) {
             throw new RuntimeException('This category cannot book tickets.');
         }
 
-        $this->add(array(
-           'type'       => 'fieldset',
-           'name'       => 'bookers_form',
-           'label'      => 'Your ticket',
-           'elements'   => array(
-               array(
-                   'type'      => 'select',
-                   'name'      => 'options_select',
-                   'label'     => 'Option',
-                   'required'  => true,
-                   'attributes'=> array(
-                       'options' => $this->createOptionsArray($bookerCategory),
-                   ),
-               ),
-           ),
-        ));
+        $this->add(
+            array(
+                'type'       => 'fieldset',
+                'name'       => 'bookers_form',
+                'label'      => 'Your ticket',
+                'elements'   => array(
+                    array(
+                        'type'      => 'select',
+                        'name'      => 'options_select',
+                        'label'     => 'Option',
+                        'required'  => true,
+                        'attributes' => array(
+                            'options' => $this->createOptionsArray($bookerCategory),
+                        ),
+                    ),
+                ),
+            )
+        );
 
         $max_nb_guests = $bookerCategory->getMaxAmountGuests();
 
-        $this->add(array(
-            'type'      => 'fieldset',
-            'name'      => 'guest_form',
-            'label'     => 'Guest tickets',
-            'elements'  => $this->getGuestArray($max_nb_guests),
-        ));
+        $this->add(
+            array(
+                'type'      => 'fieldset',
+                'name'      => 'guest_form',
+                'label'     => 'Guest tickets',
+                'elements'  => $this->getGuestArray($max_nb_guests),
+            )
+        );
 
         $this->addSubmit('Book', 'book_tickets');
     }
 
-    private function getCategory($status) {
+    private function getCategory($status)
+    {
         if ($status == null) {
             return null;
         }
 
         $status_string = $status->getStatus();
 
-        foreach($this->event->getBookingCategories() as $category) {
+        foreach ($this->event->getBookingCategories() as $category) {
             if ($category->getCategory() == $status_string) {
                 return $category;
             }
@@ -142,7 +146,8 @@ class Book extends \CommonBundle\Component\Form\Bootstrap\Form
         return null;
     }
 
-    private function createOptionsArray($category) {
+    private function createOptionsArray($category)
+    {
         if ($category == null) {
             $category = $this->event->getBookingCategories()[0];
         }
@@ -154,7 +159,8 @@ class Book extends \CommonBundle\Component\Form\Bootstrap\Form
         return $options;
     }
 
-    private function getGuestArray($amount) {
+    private function getGuestArray($amount)
+    {
         if ($amount <= 0) {
             return array();
         }
@@ -200,7 +206,8 @@ class Book extends \CommonBundle\Component\Form\Bootstrap\Form
      * @param AcademicYear $year
      * @return self
      */
-    public function setCurrentYear(AcademicYear $year) {
+    public function setCurrentYear(AcademicYear $year)
+    {
         $this->currentYear = $year;
 
         return $this;

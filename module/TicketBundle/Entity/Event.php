@@ -8,17 +8,16 @@
 
 namespace TicketBundle\Entity;
 
-
-use CalendarBundle\Entity\Node\Event as CalendarEvent,
-    Doctrine\Common\Collections\ArrayCollection,
-    Doctrine\ORM\EntityManager,
-    Doctrine\ORM\Mapping as ORM;
+use CalendarBundle\Entity\Node\Event as CalendarEvent;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="TicketBundle\Repository\Event")
  * @ORM\Table(name="tickets.events")
  */
-class Event {
+class Event
+{
 
     /**
      * @var integer The ID of the event
@@ -75,7 +74,7 @@ class Event {
     private $orders;
 
     /**
-     * @return int
+     * @return integer
      */
     public function getId()
     {
@@ -83,7 +82,7 @@ class Event {
     }
 
     /**
-     * @param int $id
+     * @param integer $id
      */
     public function setId($id)
     {
@@ -91,7 +90,7 @@ class Event {
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function isActive()
     {
@@ -99,7 +98,7 @@ class Event {
     }
 
     /**
-     * @param bool $active
+     * @param boolean $active
      */
     public function setActive($active)
     {
@@ -138,12 +137,13 @@ class Event {
         $this->bookingCategories = $bookingCategories;
     }
 
-    public function addBookingCategory($bookingCategory) {
+    public function addBookingCategory($bookingCategory)
+    {
         $this->bookingCategories[] = $bookingCategory;
     }
 
     /**
-     * @return bool
+     * @return boolean
      */
     public function isAllowRemove()
     {
@@ -151,7 +151,7 @@ class Event {
     }
 
     /**
-     * @param bool $allowRemove
+     * @param boolean $allowRemove
      */
     public function setAllowRemove($allowRemove)
     {
@@ -159,7 +159,7 @@ class Event {
     }
 
     /**
-     * @return int
+     * @return integer
      */
     public function getMaxNumberTickets()
     {
@@ -167,7 +167,7 @@ class Event {
     }
 
     /**
-     * @param int $maxNumberTickets
+     * @param integer $maxNumberTickets
      */
     public function setMaxNumberTickets($maxNumberTickets)
     {
@@ -189,6 +189,4 @@ class Event {
     {
         $this->orders = $orders;
     }
-
-
 }

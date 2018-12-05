@@ -8,9 +8,9 @@
 
 namespace TicketBundle\Entity;
 
-use CommonBundle\Entity\User\Person,
-    DateTime,
-    Doctrine\ORM\Mapping as ORM;
+use CommonBundle\Entity\User\Person;
+use DateTime;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="TicketBundle\Repository\Ticket")
@@ -83,7 +83,7 @@ class Ticket
     private $option;
 
     /**
-     * @return int
+     * @return integer
      */
     public function getId()
     {
@@ -91,7 +91,7 @@ class Ticket
     }
 
     /**
-     * @param int $id
+     * @param integer $id
      */
     public function setId($id)
     {
@@ -131,7 +131,7 @@ class Ticket
     }
 
     /**
-     * @return null|Person
+     * @return Person|null
      */
     public function getPerson()
     {
@@ -139,7 +139,7 @@ class Ticket
     }
 
     /**
-     * @param null|Person $person
+     * @param Person|null $person
      */
     public function setPerson($person)
     {
@@ -147,7 +147,7 @@ class Ticket
     }
 
     /**
-     * @return null|DateTime
+     * @return DateTime|null
      */
     public function getBookDate()
     {
@@ -155,7 +155,7 @@ class Ticket
     }
 
     /**
-     * @param null|DateTime $bookDate
+     * @param DateTime|null $bookDate
      */
     public function setBookDate($bookDate)
     {
@@ -163,7 +163,7 @@ class Ticket
     }
 
     /**
-     * @return null|DateTime
+     * @return DateTime|null
      */
     public function getSoldDate()
     {
@@ -171,7 +171,7 @@ class Ticket
     }
 
     /**
-     * @param null|DateTime $soldDate
+     * @param DateTime|null $soldDate
      */
     public function setSoldDate($soldDate)
     {
@@ -193,5 +193,4 @@ class Ticket
     {
         $this->option = $option;
     }
-
 }

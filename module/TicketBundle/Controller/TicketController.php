@@ -20,11 +20,6 @@
 
 namespace TicketBundle\Controller;
 
-use TicketBundle\Component\Ticket\Ticket as TicketBook,
-    TicketBundle\Entity\Event,
-    TicketBundle\Entity\Ticket,
-    Zend\View\Model\ViewModel;
-
 /**
  * TicketController
  *
@@ -56,7 +51,7 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
             $hydrator->setCurrentYear($currentYear);
 
             if ($form->isValid()) {
-                if($order = $form->hydrateObject()){
+                if ($order = $form->hydrateObject()) {
                     $this->getEntityManager()->persist($order);
                     $this->getEntityManager()->flush();
 
@@ -74,14 +69,15 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
                     );
                 }
             }
-
         }
 
-        return new ViewModel(array(
-           'form'   => $form,
-           'event'  => $event,
-           'person' => $person,
-        ));
+        return new ViewModel(
+            array(
+                'form'   => $form,
+                'event'  => $event,
+                'person' => $person,
+            )
+        );
 
 //        $tickets = $this->getEntityManager()
 //            ->getRepository('TicketBundle\Entity\Ticket')

@@ -60,7 +60,7 @@ class Option
     private $price;
 
     /**
-     * @return int
+     * @return integer
      */
     public function getId()
     {
@@ -68,7 +68,7 @@ class Option
     }
 
     /**
-     * @param int $id
+     * @param integer $id
      */
     public function setId($id)
     {
@@ -108,7 +108,7 @@ class Option
     }
 
     /**
-     * @return int
+     * @return integer
      */
     public function getPrice()
     {
@@ -116,12 +116,10 @@ class Option
     }
 
     /**
-     * @param int $price
+     * @param integer $price
      */
     public function setPrice($price)
     {
         $this->price = $price;
     }
-
-
 }

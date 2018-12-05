@@ -20,15 +20,15 @@
 
 namespace TicketBundle\Form\Admin\Event;
 
-use LogicException,
-    TicketBundle\Entity\Event;
+use LogicException;
+use TicketBundle\Entity\Event;
 
 /**
  * Edit Event
  *
  * @author Kristof Mariën <kristof.marien@litus.cc>
  */
-class Edit extends Add
+class Edit extends \TicketBundle\Form\Admin\Event\Add
 {
     /**
      * @var Event
@@ -37,7 +37,7 @@ class Edit extends Add
 
     public function init()
     {
-        if (null === $this->event) {
+        if ($this->event === null) {
             throw new LogicException('No event given to edit');
         }
 
@@ -66,7 +66,7 @@ class Edit extends Add
             if (isset($spec['name']) && $spec['name'] == 'event') {
                 $specs[$key]['validators'] = array(
                     array(
-                        'name'    => 'ticket_activtiy',
+                        'name'    => 'activtiy',
                         'options' => array(
                             'exclude' => $this->event,
                         ),
@@ -78,7 +78,6 @@ class Edit extends Add
 
         return $specs;
     }
-
 //    /**
 //     * @param  \TicketBundle\Entity\Event $event
 //     * @return self
