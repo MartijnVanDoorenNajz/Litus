@@ -159,13 +159,13 @@ class Add extends \CommonBundle\Component\Form\Admin\Form
                                                     'format' => 'd/m/Y H:i',
                                                 ),
                                             ),
-                                            array(
-                                                'name'    => 'bookingsclosedate',
-                                                'options' => array(
-                                                    'first_date' => 'now',
-                                                    'format'     => 'd/m/Y H:i',
-                                                ),
-                                            ),
+//                                            array(
+//                                                'name'    => 'bookingsclosedate',
+//                                                'options' => array(
+//                                                    'first_date' => 'now',
+//                                                    'format'     => 'd/m/Y H:i',
+//                                                ),
+//                                            ),
                         //                                array(
                         //                                    'name'    => 'ticket_date',
                         //                                    'options' => array(
@@ -198,13 +198,13 @@ class Add extends \CommonBundle\Component\Form\Admin\Form
                                                     'format' => 'd/m/Y H:i',
                                                 ),
                                             ),
-                                            array(
-                                                'name'    => 'bookingsclosedate',
-                                                'options' => array(
-                                                    'first_date' => 'now',
-                                                    'format'     => 'd/m/Y H:i',
-                                                ),
-                                            ),
+//                                            array(
+//                                                'name'    => 'bookingsclosedate',
+//                                                'options' => array(
+//                                                    'first_date' => 'now',
+//                                                    'format'     => 'd/m/Y H:i',
+//                                                ),
+//                                            ),
                             //                                array(
                             //                                    'name'    => 'ticket_date',
                             //                                    'options' => array(
@@ -249,13 +249,13 @@ class Add extends \CommonBundle\Component\Form\Admin\Form
                                                     'format' => 'd/m/Y H:i',
                                                 ),
                                             ),
-                                            array(
-                                                'name'    => 'bookingsclosedate',
-                                                'options' => array(
-                                                    'first_date' => 'now',
-                                                    'format'     => 'd/m/Y H:i',
-                                                ),
-                                            ),
+//                                            array(
+//                                                'name'    => 'bookingsclosedate',
+//                                                'options' => array(
+//                                                    'first_date' => 'now',
+//                                                    'format'     => 'd/m/Y H:i',
+//                                                ),
+//                                            ),
                         //                                array(
                         //                                    'name'    => 'ticket_date',
                         //                                    'options' => array(
@@ -288,13 +288,13 @@ class Add extends \CommonBundle\Component\Form\Admin\Form
                                                     'format' => 'd/m/Y H:i',
                                                 ),
                                             ),
-                                            array(
-                                                'name'    => 'bookingsclosedate',
-                                                'options' => array(
-                                                    'first_date' => 'now',
-                                                    'format'     => 'd/m/Y H:i',
-                                                ),
-                                            ),
+//                                            array(
+//                                                'name'    => 'bookingsclosedate',
+//                                                'options' => array(
+//                                                    'first_date' => 'now',
+//                                                    'format'     => 'd/m/Y H:i',
+//                                                ),
+//                                            ),
                             //                                array(
                             //                                    'name'    => 'ticket_date',
                             //                                    'options' => array(

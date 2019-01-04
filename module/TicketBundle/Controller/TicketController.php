@@ -20,6 +20,11 @@
 
 namespace TicketBundle\Controller;
 
+use Zend\View\Model\ViewModel;
+use TicketBundle\Entity\Event;
+use TicketBundle\Entity\Ticket;
+
+
 /**
  * TicketController
  *
