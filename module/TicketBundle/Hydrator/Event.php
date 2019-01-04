@@ -151,9 +151,9 @@ class Event extends \CommonBundle\Component\Hydrator\Hydrator
                     }
                     $option->setName($optionData['name']);
                     if ($same_price) {
-                        $option->setPrice($optionData['price']);
+                        $option->setPrice($optionData['price'] * 100);
                     } else {
-                        $option->setPrice($optionData['price_'.$key]);
+                        $option->setPrice($optionData['price_'.$key] * 100);
                     }
                 }
             }
@@ -175,9 +175,9 @@ class Event extends \CommonBundle\Component\Hydrator\Hydrator
                 $option->setName(Add::DEFAULT_OPTION_NAME);
 
                 if ($data['prices_single_form']['same_price']) {
-                    $option->setPrice($data['prices_single_form']['price']);
+                    $option->setPrice($data['prices_single_form']['price'] * 100);
                 } else {
-                    $option->setPrice($data['prices_single_form']['price_'.$key]);
+                    $option->setPrice($data['prices_single_form']['price_'.$key] * 100);
                 }
             }
 
@@ -328,7 +328,7 @@ class Event extends \CommonBundle\Component\Hydrator\Hydrator
             $price_reference = null;
             $ref_set = false;
             foreach($option_cat as $cat_name => $option) {
-                $prices[$cat_name] = $option->getPrice() * 100;
+                $prices[$cat_name] = number_format($option->getPrice() / 100, 2);
                 $optionData['prices_ids']['prices_id_'.$cat_name] = $option->getId();
                 if ($ref_set) {
                     if ($same_price && $price_reference != $prices[$cat_name]) {
