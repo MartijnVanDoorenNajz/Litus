@@ -82,13 +82,13 @@ class Add extends \CommonBundle\Component\Form\Bootstrap\Form
                         'name'     => 'person',
                         'label'    => 'Person',
                         'required' => true,
-                        'options'  => array(
-                            'input' => array(
-                                'validators' => array(
-                                    array('name' => 'typeahead_person'),
-                                ),
-                            ),
-                        ),
+                        // 'options'  => array(
+                        //     'input' => array(
+                        //         'validators' => array(
+                        //             array('name' => 'typeahead_person'),
+                        //         ),
+                        //     ),
+                        // ),
                     ),
                 ),
             )
@@ -155,120 +155,104 @@ class Add extends \CommonBundle\Component\Form\Bootstrap\Form
             )
         );
 
-        $optionsForm = $this->addFieldset('Options', 'options_form');
+        $ticketOptionsForm = $this->addFieldset('Ticket options', 'ticket_options_form');
 
-        if ($this->event->getOptions()->isEmpty()) {
-            $optionsForm->add(
-                array(
-                    'type'       => 'select',
-                    'name'       => 'number_member',
-                    'label'      => 'Number Member',
-                    'required'   => true,
-                    'attributes' => array(
-                        'class'      => 'ticket_option',
-                        'id'         => 'number_member',
-                        'data-price' => $this->event->getPriceMembers(),
-                        'options'    => $this->getNumberOptions(),
-                    ),
-                    'options' => array(
-                        'input' => array(
-                            'validators' => array(
-                                array(
-                                    'name'    => 'ticket_number_tickets',
-                                    'options' => array(
-                                        'event' => $this->event,
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
-                )
-            );
+        $ticketOptionsForm->add(array(
+            'type'       => 'select',
+            'name'       => 'category_choice',
+            'label'      => 'Category',
+            'attributes' => array(
+                'class'     => 'category_option',
+                'options'   =>  $this->getBookingOptions(),
+                'id'        => 'category'
+            )
+        ));
 
-            if (!$this->event->isOnlyMembers()) {
-                $optionsForm->add(
-                    array(
-                        'type'       => 'select',
-                        'name'       => 'number_non_member',
-                        'label'      => 'Number Non Member',
-                        'attributes' => array(
-                            'class'      => 'ticket_option',
-                            'id'         => 'number_non_member',
-                            'data-price' => $this->event->getPriceNonMembers(),
-                            'options'    => $this->getNumberOptions(),
-                        ),
-                        'options' => array(
-                            'input' => array(
-                                'validators' => array(
-                                    array(
-                                        'name'    => 'ticket_number_tickets',
-                                        'options' => array(
-                                            'event' => $this->event,
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    )
-                );
-            }
-        } else {
-            foreach ($this->event->getOptions() as $option) {
-                $optionsForm->add(
-                    array(
-                        'type'       => 'select',
-                        'name'       => 'option_' . $option->getId() . '_number_member',
-                        'label'      => ucfirst($option->getName()) . ' (Member)',
-                        'attributes' => array(
-                            'class'      => 'ticket_option',
-                            'id'         => 'option_' . $option->getId() . '_number_member',
-                            'data-price' => $option->getPriceMembers(),
-                            'options'    => $this->getNumberOptions(),
-                        ),
-                        'options' => array(
-                            'input' => array(
-                                'validators' => array(
-                                    array(
-                                        'name'    => 'ticket_number_tickets',
-                                        'options' => array(
-                                            'event' => $this->event,
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    )
-                );
 
-                if (!$this->event->isOnlyMembers()) {
-                    $optionsForm->add(
-                        array(
-                            'type'       => 'select',
-                            'name'       => 'option_' . $option->getId() . '_number_non_member',
-                            'label'      => ucfirst($option->getName()) . ' (Non Member)',
-                            'attributes' => array(
-                                'class'      => 'ticket_option',
-                                'id'         => 'option_' . $option->getId() . '_number_non_member',
-                                'data-price' => $option->getPriceNonMembers(),
-                                'options'    => $this->getNumberOptions(),
-                            ),
-                            'options' => array(
-                                'input' => array(
-                                    'validators' => array(
-                                        array(
-                                            'name'    => 'ticket_number_tickets',
-                                            'options' => array(
-                                                'event' => $this->event,
-                                            ),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        )
-                    );
-                }
-            }
-        }
+
+            // foreach ($this->event->getBookingCategories() as $category) {
+            //     foreach ($category->getOptions() as $option) {
+            //         $categoriesForm->add(array(
+            //             'type'       => 'select',
+            //             'name'       => 'category_' . $category->getId(),
+            //             'label'      => ucfirst(str_replace('_', ' ', $category->getCategory())),
+            //             // 'attributes' => array(
+            //             //     'class'      => 'ticket_option',
+            //             //     'id'         => 'category_' . $category->getId(),
+            //             //     'data-price' => $category->getPriceMembers(),
+            //             //     'options'    => $this->getNumberOptions(),
+            //             // ),
+            //             // 'options' => array(
+            //             //     'input' => array(
+            //             //         'validators' => array(
+            //             //             array(
+            //             //                 'name'    => 'ticket_number_tickets',
+            //             //                 'options' => array(
+            //             //                     'event' => $this->event,
+            //             //                 ),
+            //             //             ),
+            //             //         ),
+            //             //     ),
+            //             // ),
+            //         ));
+            //     }
+            // }
+                // $categoriesForm->add(
+                //     array(
+                //         'type'       => 'select',
+                //         'name'       => 'category_' . $category->getId(),
+                //         'label'      => ucfirst($category->getCategory()),
+                //         'attributes' => array(
+                //             'class'      => 'ticket_option',
+                //             'id'         => 'category_' . $category->getId(),
+                //             'data-price' => $category->getPriceMembers(),
+                //             'options'    => $this->getNumberOptions(),
+                //         ),
+                //         'options' => array(
+                //             'input' => array(
+                //                 'validators' => array(
+                //                     array(
+                //                         'name'    => 'ticket_number_tickets',
+                //                         'options' => array(
+                //                             'event' => $this->event,
+                //                         ),
+                //                     ),
+                //                 ),
+                //             ),
+                //         ),
+                //     )
+                // );
+            // }
+
+                // if (!$this->event->isOnlyMembers()) {
+                //     $optionsForm->add(
+                //         array(
+                //             'type'       => 'select',
+                //             'name'       => 'option_' . $option->getId() . '_number_non_member',
+                //             'label'      => ucfirst($option->getName()) . ' (Non Member)',
+                //             'attributes' => array(
+                //                 'class'      => 'ticket_option',
+                //                 'id'         => 'option_' . $option->getId() . '_number_non_member',
+                //                 'data-price' => $option->getPriceNonMembers(),
+                //                 'options'    => $this->getNumberOptions(),
+                //             ),
+                //             'options' => array(
+                //                 'input' => array(
+                //                     'validators' => array(
+                //                         array(
+                //                             'name'    => 'ticket_number_tickets',
+                //                             'options' => array(
+                //                                 'event' => $this->event,
+                //                             ),
+                //                         ),
+                //                     ),
+                //                 ),
+                //             ),
+                //         )
+                //     );
+                // }
+            // }
+        // }
 
         $this->add(
             array(
@@ -282,6 +266,17 @@ class Add extends \CommonBundle\Component\Form\Bootstrap\Form
         );
 
         $this->addSubmit('Sale', 'sale_tickets', 'sale', array('id' => 'sale_tickets'));
+    }
+
+    private function getBookingOptions()
+    {
+        $categories = $this->event->getBookingCategories();
+        $options = array();
+        foreach ($categories as $category) {
+
+            $options[] = ucfirst(str_replace('_', ' ', $category->getCategory()));
+        }
+        return $options;
     }
 
     private function getNumberOptions()

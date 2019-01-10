@@ -43,6 +43,10 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
             return $this->notFoundAction();
         }
 
+        $tickets = $this->getEntityManager()
+           ->getRepository('TicketBundle\Entity\Ticket')
+           ->findAllByEventAndPerson($event, $person);
+
         $currentYear = $this->getCurrentAcademicYear();
 
         $form = $this->getForm('ticket_ticket_book', array('event' => $event, 'person' => $person, 'currentYear' => $currentYear));
@@ -81,6 +85,8 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
                 'form'   => $form,
                 'event'  => $event,
                 'person' => $person,
+                'currentYear' => $currentYear,
+                'tickets' => $tickets,
             )
         );
 

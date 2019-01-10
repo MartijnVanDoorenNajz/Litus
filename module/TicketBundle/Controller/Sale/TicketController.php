@@ -38,8 +38,8 @@ class TicketController extends \TicketBundle\Component\Controller\SaleController
 
         $paginator = $this->paginator()->createFromArray(
             $this->getEntityManager()
-                ->getRepository('TicketBundle\Entity\Ticket')
-                ->findAllActiveByEvent($event),
+                ->getRepository('TicketBundle\Entity\OrderEntity')
+                ->findAllTicketsByEvent($event),
             $this->getParam('page')
         );
 

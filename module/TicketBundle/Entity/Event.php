@@ -142,6 +142,22 @@ class Event
         $this->bookingCategories[] = $bookingCategory;
     }
 
+    public function getBookingCategoryByStatus($status)
+    {
+        if ($status == null) {
+            return null;
+        }
+
+        $status_string = $status->getStatus();
+
+        foreach ($this->getBookingCategories() as $category) {
+            if ($category->getCategory() == $status_string) {
+                return $category;
+            }
+        }
+        return null;
+    }
+
     /**
      * @return boolean
      */
