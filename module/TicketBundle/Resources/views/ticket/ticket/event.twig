@@ -59,18 +59,13 @@
                     </dl>
                 </div>
 
-                {#{% if event.isStillBookable() or (event.isStillBookablePraesidium() and isPraesidium) %}#}
-                    {#<div class="page-header">#}
-                        {#<h2>{{ translate('Book Tickets') }}</h2>#}
-                    {#</div>#}
-                    {#{% import 'site/partials/form.twig' as forms %}#}
-                    {#{{ forms.renderForm(form) }}#}
-                {#{% endif %}#}
-
-                <div id="controller_action">
+                {% if event.canBookTickets(person.getOrganizationStatus(currentYear)) %}
+                    <div class="page-header">
+                        <h2>{{ translate('Book Tickets') }}</h2>
+                    </div>
                     {% import 'site/partials/form.twig' as forms %}
                     {{ forms.renderForm(form) }}
-                </div>
+                {% endif %}
 
                 <div class="page-header">
                     <h2>{{ translate('Your Tickets') }}</h2>

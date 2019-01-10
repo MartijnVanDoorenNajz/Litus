@@ -11,6 +11,7 @@ namespace TicketBundle\Entity;
 use CalendarBundle\Entity\Node\Event as CalendarEvent;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
 
 /**
  * @ORM\Entity(repositoryClass="TicketBundle\Repository\Event")
@@ -204,5 +205,18 @@ class Event
     public function setOrders($orders)
     {
         $this->orders = $orders;
+    }
+
+    /**
+     * @param OrganisationStatus $status
+     */
+    public function canBookTickets($status)
+    {
+        $now = new DateTime();
+        $category = $this->getBookingCategoryByStatus($status);
+        if ($category == null) {
+            return false;
+        }
+        return ($category->getBookingOpenDate() <= $now) and ($category->getBookingCloseDate() >= $now);
     }
 }
