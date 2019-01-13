@@ -30,7 +30,7 @@
             {% if not event.isOnlyMembers() %}
                 <p>Not Member: <b>{{ event.getNumberSoldByOption(null, false) }} / {{ event.getNumberBookedByOption(null, false) }}</b></p>
             {% endif %}
-        {% endif %}
+        {% endif %} #}
         <br />
 
         <div id="controller_action">
@@ -52,10 +52,9 @@
                         <th width="90px">Identification</th>
                         <th width="100px">Status</th>
                         <th width="150px">Option</th>
-                        <th width="100px">Number</th>
                         <th width="110px">Book Date</th>
                         <th width="110px">Sold Date</th>
-                        <th width="70px">Member</th>
+                        <th width="70px">Category</th>
                     </tr>
                 </table>
             </div>
@@ -64,28 +63,28 @@
                 <table class="full_width manage tickets">
                     <thead>
                         <tr>
-                            <th>Person</th>
+                            <th>Booker</th>
+                            <th width="90px">Booked for</th
                             <th width="90px">Identification</th>
                             <th width="100px">Status</th>
                             <th width="150px">Option</th>
-                            <th width="100px">Number</th>
                             <th width="110px">Book Date</th>
                             <th width="110px">Sold Date</th>
-                            <th width="70px">Member</th>
+                            <th width="120px">Category</th>
                         </tr>
                     </thead>
 
                     <tbody>
                         {% for ticket in paginator %}
                             <tr class="item item-{{ ticket.getId() }}">
-                                <td>{% if ticket.getFullName() %}{{ ticket.getFullName() }}{% else %}(none){% endif %}</td>
+                                <td>{{ ticket.getOrderEntity().getBooker().getFirstName() }} {{ticket.getOrderEntity().getBooker().getLastName()}}</td>
+                                <td>{% if ticket.getPerson() %}{{ ticket.getPerson().getFirstName() }} {{ticket.getPerson().getLastName()}}{% endif %}</td>
                                 <td>{% if ticket.getPerson() %}{{ ticket.getPerson().getUniversityIdentification() }}{% endif %}</td>
                                 <td>{{ ticket.getStatus() }}</td>
-                                <td>{{ ticket.getOption().getName() }} ({% if ticket.isMember() %}Member{% else %}Non Member{% endif %})</td>
-                                <td>{{ ticket.getNumber() }}</td>
+                                <td>{{ ticket.getOption().getName() }} ({{ ticket.getOption().getCategory().getCategory() }})</td>
                                 <td>{{ ticket.getBookDate().format('d/m/Y H:i') }}</td>
                                 <td>{{ ticket.getSoldDate().format('d/m/Y H:i') }}</td>
-                                <td>{% if ticket.isMember() %}&times;{% endif %}</td>
+                                <td>{{ ticket.getOption().getCategory().getCategory() }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>

@@ -29,7 +29,9 @@ return array(
     'Book Date'                                    => 'Reserveer Datum',
     'Sold Date'                                    => 'Verkoop Datum',
     'Booked'                                       => 'Gereserveerd',
+    'booked'                                       => 'Gereserveerd',
     'Sold'                                         => 'Verkocht',
+    'sold'                                         => 'Verkocht',
     'Book Tickets'                                 => 'Reserveer Tickets',
     'Remove'                                       => 'Verwijder',
     'The ticket was succesfully deleted.'          => 'Het ticket is succesvol verwijderd.',
@@ -43,6 +45,7 @@ return array(
     'R-number'                                     => 'R-nummer',
     'Guest tickets'                                => 'Gasten tickets',
     'Your ticket'                                 => 'Jouw ticket',
+
 
     'The tickets were succesfully booked'     => 'De tickets zijn succesvol gereserveerd',
     'There were not enough tickets available' => 'Er waren onvoldoende tickets beschikbaar',

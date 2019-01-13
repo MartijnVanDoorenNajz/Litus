@@ -21,6 +21,8 @@
 namespace TicketBundle\Repository;
 
 use TicketBundle\Entity\Event;
+use CommonBundle\Entity\User\Person;
+
 
 /**
  * OrderEntity
@@ -34,12 +36,30 @@ class OrderEntity extends \CommonBundle\Component\Doctrine\ORM\EntityRepository
    public function findAllByEventQuery(Event $event)
    {
        $query = $this->getEntityManager()->createQueryBuilder();
-       $resultSet = $query->select('o', 't')
+       $resultSet = $query->select('o')
            ->from('TicketBundle\Entity\OrderEntity', 'o')
            ->where(
               $query->expr()->eq('o.event', ':event')
            )
            ->setParameter('event', $event->getId())
+           ->getQuery();
+
+       return $resultSet;
+   }
+
+   public function findAllByEventAndPersonQuery(Event $event, Person $person)
+   {
+       $query = $this->getEntityManager()->createQueryBuilder();
+       $resultSet = $query->select('o')
+           ->from('TicketBundle\Entity\OrderEntity', 'o')
+           ->where(
+              $query->expr()->andX(
+                   $query->expr()->eq('o.booker', ':person'),
+                   $query->expr()->eq('o.event', ':event')
+               )
+           )
+           ->setParameter('event', $event->getId())
+           ->setParameter('person', $person->getId())
            ->getQuery();
 
        return $resultSet;

@@ -44,7 +44,7 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
         }
 
         $tickets = $this->getEntityManager()
-           ->getRepository('TicketBundle\Entity\Ticket')
+           ->getRepository('TicketBundle\Entity\OrderEntity')
            ->findAllByEventAndPerson($event, $person);
 
         $currentYear = $this->getCurrentAcademicYear();
@@ -86,7 +86,7 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
                 'event'  => $event,
                 'person' => $person,
                 'currentYear' => $currentYear,
-                'tickets' => $tickets,
+                'orders' => $tickets,
             )
         );
 
