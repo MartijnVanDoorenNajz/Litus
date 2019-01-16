@@ -159,6 +159,15 @@ class Category
     }
 
     /**
+     * @return boolean
+     */
+    public function isBookable()
+    {
+        $now = new DateTime();
+        return ($now <= $this->getBookingCloseDate() and $now >= $this->getBookingOpenDate());
+    }
+
+    /**
      * @return integer
      */
     public function getMaxNumberTickets()

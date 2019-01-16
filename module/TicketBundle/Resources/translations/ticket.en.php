@@ -45,6 +45,12 @@ return array(
     'R-number'                                     => 'R-number',
     'Guest tickets'                                => 'Guest tickets',
     'Your ticket'                                  => 'Your ticket',
+    'praesidium'                                   => 'Praesidium',
+    'supportive_member'                            => 'Supportive Member',
+    'honorary_member'                              => 'Honorary Member',
+    'non_member'                                   => 'Non Member',
+    'member'                                       => 'Member',
+    'default'                                      => 'Default',
 
 
     'The tickets were succesfully booked'     => 'The tickets were succesfully booked',

@@ -66,6 +66,7 @@ class IndexController extends \TicketBundle\Component\Controller\SaleController
         return new ViewModel(
             array(
                 'form' => $form,
+                'entityManager' => $this->getEntityManager(),
             )
         );
     }

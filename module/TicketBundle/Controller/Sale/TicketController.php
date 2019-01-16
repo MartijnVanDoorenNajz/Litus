@@ -38,8 +38,8 @@ class TicketController extends \TicketBundle\Component\Controller\SaleController
 
         $paginator = $this->paginator()->createFromArray(
             $this->getEntityManager()
-                ->getRepository('TicketBundle\Entity\OrderEntity')
-                ->findAllTicketsByEvent($event),
+                ->getRepository('TicketBundle\Entity\Ticket')
+                ->findAllByEvent($event),
             $this->getParam('page')
         );
 
@@ -59,7 +59,7 @@ class TicketController extends \TicketBundle\Component\Controller\SaleController
             return new ViewModel();
         }
 
-        $ticket->setStatus('empty');
+        $ticket->setStatus('annulled');
         $this->getEntityManager()->flush();
 
         return new ViewModel(

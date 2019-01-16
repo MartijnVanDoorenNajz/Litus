@@ -44,8 +44,13 @@ return array(
     'Number Non Member'                            => 'Aantal Geen Lid',
     'R-number'                                     => 'R-nummer',
     'Guest tickets'                                => 'Gasten tickets',
-    'Your ticket'                                 => 'Jouw ticket',
-
+    'Your ticket'                                  => 'Jouw ticket',
+    'praesidium'                                   => 'Praesidium',
+    'supportive_member'                            => 'Vaste Medewerker',
+    'honorary_member'                              => 'Erelid',
+    'non_member'                                   => 'Niet Lid',
+    'member'                                       => 'Lid',
+    'default'                                      => 'Standaard',
 
     'The tickets were succesfully booked'     => 'De tickets zijn succesvol gereserveerd',
     'There were not enough tickets available' => 'Er waren onvoldoende tickets beschikbaar',

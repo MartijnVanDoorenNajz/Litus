@@ -44,7 +44,7 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
         }
 
         $tickets = $this->getEntityManager()
-           ->getRepository('TicketBundle\Entity\OrderEntity')
+           ->getRepository('TicketBundle\Entity\Ticket')
            ->findAllByEventAndPerson($event, $person);
 
         $currentYear = $this->getCurrentAcademicYear();
@@ -86,7 +86,7 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
                 'event'  => $event,
                 'person' => $person,
                 'currentYear' => $currentYear,
-                'orders' => $tickets,
+                'tickets' => $tickets,
             )
         );
 
@@ -160,7 +160,7 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
         }
 
         if ($ticket->getEvent()->areTicketsGenerated()) {
-            $ticket->setStatus('empty');
+            $ticket->setStatus('annulled');
         } else {
             $this->getEntityManager()->remove($ticket);
         }

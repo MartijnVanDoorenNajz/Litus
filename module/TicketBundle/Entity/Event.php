@@ -209,6 +209,7 @@ class Event
 
     /**
      * @param OrganisationStatus $status
+     * @return Boolean
      */
     public function canBookTickets($status)
     {
@@ -218,5 +219,25 @@ class Event
             return false;
         }
         return ($category->getBookingOpenDate() <= $now) and ($category->getBookingCloseDate() >= $now);
+    }
+
+    /**
+     * @param EntityManager $entityManager
+     */
+    public function getNumberBooked($entityManager)
+    {
+        $result = $entityManager->getRepository('TicketBundle\Entity\Ticket')
+           ->getAllByEventAndStatus($this, 'booked');
+        return count($result);
+    }
+
+    /**
+     * @param EntityManager $entityManager
+     */
+    public function getNumberSold($entityManager)
+    {
+        $result = $entityManager->getRepository('TicketBundle\Entity\Ticket')
+           ->getAllByEventAndStatus($this, 'sold');
+        return count($result);
     }
 }

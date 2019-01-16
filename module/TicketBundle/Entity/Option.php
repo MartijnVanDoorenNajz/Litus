@@ -122,4 +122,24 @@ class Option
     {
         $this->price = $price;
     }
+
+    /**
+     * @param EntityManager $entityManager
+     */
+    public function getAmountBooked($entityManager)
+    {
+        $result =  $entityManager->getRepository('TicketBundle\Entity\Ticket')
+           ->getAllByEventAndOptionAndStatus($this->getCategory()->getEvent(), $this, 'booked');
+        return count($result);
+    }
+
+    /**
+     * @param EntityManager $entityManager
+     */
+    public function getAmountSold($entityManager)
+    {
+        $result = $entityManager->getRepository('TicketBundle\Entity\Ticket')
+           ->getAllByEventAndOptionAndStatus($this->getCategory()->getEvent(), $this, 'sold');
+           return count($result);
+    }
 }

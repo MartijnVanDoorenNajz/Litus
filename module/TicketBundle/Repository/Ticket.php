@@ -21,6 +21,8 @@
 namespace TicketBundle\Repository;
 
 use TicketBundle\Entity\Event;
+use TicketBundle\Entity\Category;
+use TicketBundle\Entity\Option;
 use CommonBundle\Entity\User\Person;
 
 /**
@@ -31,32 +33,13 @@ use CommonBundle\Entity\User\Person;
  */
 class Ticket extends \CommonBundle\Component\Doctrine\ORM\EntityRepository
 {
-//    public function findOneByEventAndNumber(EventEntity $event, $number)
-//    {
-//        $query = $this->getEntityManager()->createQueryBuilder();
-//        $resultSet = $query->select('t')
-//            ->from('TicketBundle\Entity\Ticket', 't')
-//            ->where(
-//                $query->expr()->andX(
-//                    $query->expr()->eq('t.event', ':event'),
-//                    $query->expr()->eq('t.number', ':number')
-//                )
-//            )
-//            ->setParameter('event', $event)
-//            ->setParameter('number', $number)
-//            ->setMaxResults(1)
-//            ->getQuery()
-//            ->getOneOrNullResult();
-//
-//        return $resultSet;
-//    }
-//
+
    public function findAllByEventQuery(Event $event)
    {
        $query = $this->getEntityManager()->createQueryBuilder();
-       $resultSet = $query->select('o', 't')
-           ->from('TicketBundle\Entity\OrderEntity', 'o')
-           ->join('o.tickets', 't')
+       $resultSet = $query->select('t')
+           ->from('TicketBundle\Entity\Ticket', 't')
+           ->join('t.orderEntity', 'o')
            ->where(
               $query->expr()->eq('o.event', ':event')
            )
@@ -69,13 +52,13 @@ class Ticket extends \CommonBundle\Component\Doctrine\ORM\EntityRepository
    public function findAllByEventAndPersonQuery(Event $event, Person $person)
    {
        $query = $this->getEntityManager()->createQueryBuilder();
-       $resultSet = $query->select('o', 't')
-           ->from('TicketBundle\Entity\OrderEntity', 'o')
-           ->join('o.tickets', 't')
+       $resultSet = $query->select('t')
+           ->from('TicketBundle\Entity\Ticket', 't')
+           ->join('t.orderEntity', 'o')
            ->where(
               $query->expr()->andX(
-                   $query->expr()->eq('t.person', ':person'),
-                   $query->expr()->eq('o.event', ':event')
+                   $query->expr()->eq('o.event', ':event'),
+                   $query->expr()->eq('t.person', ':person')
                )
            )
            ->setParameter('event', $event->getId())
@@ -83,44 +66,83 @@ class Ticket extends \CommonBundle\Component\Doctrine\ORM\EntityRepository
            ->getQuery();
        return $resultSet;
    }
-//
-//    public function findAllEmptyByEventQuery(EventEntity $event)
-//    {
-//        $query = $this->getEntityManager()->createQueryBuilder();
-//        $resultSet = $query->select('t')
-//            ->from('TicketBundle\Entity\Ticket', 't')
-//            ->where(
-//                $query->expr()->andX(
-//                    $query->expr()->eq('t.event', ':event'),
-//                    $query->expr()->eq('t.status', ':empty')
-//                )
-//            )
-//            ->setParameter('event', $event)
-//            ->setParameter('empty', 'empty')
-//            ->getQuery();
-//
-//        return $resultSet;
-//    }
-//
-   public function findAllByActiveEventQuery(Event $event)
+
+   public function findAllByEventAndCategoryQuery(Event $event, Category $category)
    {
        $query = $this->getEntityManager()->createQueryBuilder();
        $resultSet = $query->select('t')
            ->from('TicketBundle\Entity\Ticket', 't')
+           ->join('t.orderEntity', 'o')
            ->where(
-               $query->expr()->andX(
-                   $query->expr()->eq('t.event', ':event'),
-                   $query->expr()->orX(
-                       $query->expr()->eq('t.status', ':booked'),
-                       $query->expr()->eq('t.status', ':sold')
-                   )
-               )
-           )
-           ->setParameter('event', $event)
-           ->setParameter('booked', 'booked')
-           ->setParameter('sold', 'sold')
-           ->getQuery()
-           ->getResult();
+                $query->expr()->andX(
+                   $query->expr()->eq('o.event', ':event'),
+                   $query->expr()->eq('t.category', ':category')
+               )           
+              )
+           ->setParameter('event', $event->getId())
+           ->setParameter('category', $category->getId())
+           ->getQuery();
+        return $resultSet;
+
+   }
+
+   public function countAllByEventAndCategoryQuery(Event $event, Category $category)
+   {
+       $query = $this->getEntityManager()->createQueryBuilder();
+       $resultSet = $query->select('COUNT(t.id)')
+           ->from('TicketBundle\Entity\Ticket', 't')
+           ->join('t.orderEntity', 'o')
+           ->join('t.option', 'op')
+           ->where(
+                $query->expr()->andX(
+                  $query->expr()->eq('o.event', ':event'),
+                  $query->expr()->eq('op.category', ':category')
+                )           
+              )
+           ->setParameter('event', $event->getId())
+           ->setParameter('category', $category->getId())
+           ->getQuery();
+       return $resultSet;
+   }
+
+   public function getAllByEventAndStatusQuery(Event $event, $status)
+   {
+      $query = $this->getEntityManager()->createQueryBuilder();
+      $resultSet = $query->select('t')
+           ->from('TicketBundle\Entity\Ticket', 't')
+           ->join('t.orderEntity', 'o')
+           ->where(
+                $query->expr()->andX(
+                  $query->expr()->eq('o.event', ':event'),
+                  $query->expr()->eq('t.status', ':status')
+                )           
+              )
+           ->setParameter('event', $event->getId())
+           ->setParameter('status', $status)
+           ->getQuery();
+       return $resultSet;
+   }
+
+   public function getAllByEventAndOptionAndStatusQuery(Event $event, Option $option, $status)
+   {
+      $query = $this->getEntityManager()->createQueryBuilder();
+      $resultSet = $query->select('t')
+           ->from('TicketBundle\Entity\Ticket', 't')
+           ->join('t.orderEntity', 'o')
+           ->where(
+              $query->expr()->andX(
+                $query->expr()->andX(
+                  $query->expr()->eq('o.event', ':event'),
+                  $query->expr()->eq('t.option', ':option')
+                ),
+                $query->expr()->eq('t.status', ':status')         
+              )
+            )
+           ->setParameter('event', $event->getId())
+           ->setParameter('option', $option->getId())
+           ->setParameter('status', $status)
+           ->getQuery();
+       return $resultSet;
    }
 //
 //    public function findAllByEventAndPersonName(EventEntity $event, $name)

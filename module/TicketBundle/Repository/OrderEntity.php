@@ -54,8 +54,11 @@ class OrderEntity extends \CommonBundle\Component\Doctrine\ORM\EntityRepository
            ->from('TicketBundle\Entity\OrderEntity', 'o')
            ->where(
               $query->expr()->andX(
-                   $query->expr()->eq('o.booker', ':person'),
-                   $query->expr()->eq('o.event', ':event')
+                   $query->expr()->eq('o.event', ':event'),
+                   $query->expr()->orX(
+                      $query->expr()->eq('t.person', ':person'),
+                      $query->expr()->eq('o.booker', ':person')
+                   )
                )
            )
            ->setParameter('event', $event->getId())
