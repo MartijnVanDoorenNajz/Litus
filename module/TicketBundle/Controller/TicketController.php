@@ -87,6 +87,7 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
                 'person' => $person,
                 'currentYear' => $currentYear,
                 'tickets' => $tickets,
+                'entityManager' => $this->getEntityManager(),
             )
         );
 

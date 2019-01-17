@@ -43,6 +43,7 @@ class EventController extends \CommonBundle\Component\Controller\ActionControlle
             array(
                 'paginator'         => $paginator,
                 'paginationControl' => $this->paginator()->createControl(true),
+                'entityManager'     => $this->getEntityManager(),
             )
         );
     }
