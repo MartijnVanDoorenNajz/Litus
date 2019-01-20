@@ -76,16 +76,16 @@
                     <td class="soldDate">{{ dateLocalized(ticket.getSoldDate(), 'd/MM/YYYY HH:mm') }}</td>
                     <td class="actions">
                         {% if hasAccess('ticket_sale_ticket', 'unassign') and event.areTicketsGenerated() and ticket.getFullName() %}
-                            <a href="#" data-id="{{ ticket.getId() }}" data-person="{{ ticket.getFullName() }}" class="btn btn-danger btn-sm unassignTicket">{{ translate('Unassign') }}</a>
+                            <a href="#" data-id="{{ ticket.getId() }}" data-person="{{ ticket.getPerson().getFirstName() }} {{ ticket.getPerson().getLastName() }}" class="btn btn-danger btn-sm unassignTicket">{{ translate('Unassign') }}</a>
                         {% endif %}
                         {% if hasAccess('ticket_sale_ticket', 'delete') and not event.areTicketsGenerated() %}
-                            <a href="#" data-id="{{ ticket.getId() }}" data-person="{{ ticket.getFullName() }}" class="btn btn-danger btn-sm deleteTicket">{{ translate('Delete') }}</a>
+                            <a href="#" data-id="{{ ticket.getId() }}" data-person="{{ ticket.getPerson().getFirstName() }} {{ ticket.getPerson().getLastName() }}" class="btn btn-danger btn-sm deleteTicket">{{ translate('Delete') }}</a>
                         {% endif %}
                         {% if hasAccess('ticket_sale_ticket', 'sale') %}
-                            <a href="#" data-id="{{ ticket.getId() }}" data-person="{{ ticket.getFullName() }}" class="btn btn-success btn-sm saleTicket" {% if ticket.getStatusCode() != 'booked' %}style="display: none"{% endif %}>{{ translate('Sale') }}</a>
+                            <a href="#" data-id="{{ ticket.getId() }}" data-person="{{ ticket.getPerson().getFirstName() }} {{ ticket.getPerson().getLastName() }}" class="btn btn-success btn-sm saleTicket" {% if ticket.getStatus() != 'booked' %}style="display: none"{% endif %}>{{ translate('Sell Ticket') }}</a>
                         {% endif %}
                         {% if hasAccess('ticket_sale_ticket', 'unsale') %}
-                            <a href="#" data-id="{{ ticket.getId() }}" data-person="{{ ticket.getFullName() }}" class="btn btn-info btn-sm undoSaleTicket" {% if ticket.getStatusCode() != 'sold' %}style="display: none"{% endif %}>{{ translate('Undo Sale') }}</a>
+                            <a href="#" data-id="{{ ticket.getId() }}" data-person="{{ ticket.getPerson().getFirstName() }} {{ ticket.getPerson().getLastName() }}" class="btn btn-info btn-sm undoSaleTicket" {% if ticket.getStatus() != 'sold' %}style="display: none"{% endif %}>{{ translate('Undo Sale') }}</a>
                         {% endif %}
                     </td>
                 </tr>
@@ -136,10 +136,10 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <a class="close" data-dismiss="modal">&times;</a>
-                    <h4>{{ translate('Sale Ticket') }}</h4>
+                    <h4>{{ translate('Sale') }}</h4>
                 </div>
                 <div class="modal-body">
-                    <p>{{ translate('Are you sure you want to sale the ticket of') }}: <b><span class="person"></span></b>?</p>
+                    <p>{{ translate('Are you sure you want to sell the ticket of') }}: <b><span class="person"></span></b>?</p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-success confirm">{{ translate('Yes') }}</button>

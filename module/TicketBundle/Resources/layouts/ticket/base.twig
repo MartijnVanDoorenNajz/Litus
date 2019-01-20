@@ -71,7 +71,7 @@
                             {% endfor %}
                             {% if event.getMaxNumberTickets() > 0 %}
                                 <dt>Number Free</dt>
-                                <dd>{{ event.getMaxNumberTickets() - event.getNumberBooked(entityManager) }}</dd>
+                                <dd>{{ event.getMaxNumberTickets() - eventInfo['event']['number_booked'] }}</dd>
                             {% endif %}
                         </dl>
                     </div>
@@ -82,11 +82,11 @@
                                 <dt>{{ translate(category.getCategory()) }}</dt><dd></dd>
                                 {% for option in category.getOptions() %}
                                     <dt>{{ option.getName() }}</dt>
-                                    <dd>{{ option.getAmountSold(entityManager) }} / {{ option.getAmountBooked(entityManager) }}</dd>
+                                    <dd>{{ eventInfo['categories'][category.getCategory()][option.getName()]['number_sold'] }} / {{ eventInfo['categories'][category.getCategory()][option.getName()]['number_booked'] }}</dd>
                                 {% endfor %}
                             {% endfor %}
                             <dt>Total</dt>
-                            <dd>{{ event.getNumberSold(entityManager) }} / {{ event.getNumberBooked(entityManager) }}</dd>
+                            <dd>{{ eventInfo['event']['number_sold'] }} / {{ eventInfo['event']['number_booked'] }}</dd>
                         </dl>
                     </div>
                 </div>

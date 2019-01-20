@@ -51,6 +51,11 @@ return array(
     'non_member'                                   => 'Niet Lid',
     'member'                                       => 'Lid',
     'default'                                      => 'Standaard',
+    'Sell'                                         => 'Verkoop',
+    'Sale'                                         => 'Verkoop',
+    'Are you sure you want to sell the ticket of'  => 'Ben je zeker dat je dit ticket wil verkopen van',
+
+
 
     'The tickets were succesfully booked'     => 'De tickets zijn succesvol gereserveerd',
     'There were not enough tickets available' => 'Er waren onvoldoende tickets beschikbaar',

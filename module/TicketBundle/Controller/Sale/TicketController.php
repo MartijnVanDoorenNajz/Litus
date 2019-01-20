@@ -22,6 +22,7 @@ namespace TicketBundle\Controller\Sale;
 
 use TicketBundle\Entity\Ticket;
 use Zend\View\Model\ViewModel;
+use DateTime;
 
 /**
  * TicketController
@@ -47,7 +48,7 @@ class TicketController extends \TicketBundle\Component\Controller\SaleController
             array(
                 'paginator'         => $paginator,
                 'paginationControl' => $this->paginator()->createControl(true),
-                'entityManager'     => $this->getEntityManager(),
+                'eventInfo'         => $this->getEventInfo($event)
             )
         );
     }
@@ -97,6 +98,7 @@ class TicketController extends \TicketBundle\Component\Controller\SaleController
         }
 
         $ticket->setStatus('sold');
+        $ticket->setSoldDate(new DateTime());
         $this->getEntityManager()->flush();
 
         return new ViewModel(
@@ -115,6 +117,7 @@ class TicketController extends \TicketBundle\Component\Controller\SaleController
         }
 
         $ticket->setStatus('booked');
+        $ticket->setSoldDate(null);
         $this->getEntityManager()->flush();
 
         return new ViewModel(
@@ -145,5 +148,32 @@ class TicketController extends \TicketBundle\Component\Controller\SaleController
         }
 
         return $ticket;
+    }
+
+    /**
+     * @return array
+     */
+    private function getEventInfo($event)
+    {
+        $categories = array();
+        foreach ($event->getBookingCategories() as $category) {
+            $options = array();
+            foreach ($category->getOptions() as $option)
+            {
+                $options[$option->getName()] = array(
+                    'number_booked' => $option->getAmountBooked($this->getEntityManager()),
+                    'number_sold' => $option->getAmountSold($this->getEntityManager()) 
+                );
+            }
+            $categories[$category->getCategory()] = $options;
+        }
+        $result = array(
+            'event' => array(
+                'number_booked' => $event->getNumberBooked($this->getEntityManager()),
+                'number_sold'   => $event->getNumberSold($this->getEntityManager()),
+            ),
+            'categories' => $categories
+        );
+        return $result;
     }
 }

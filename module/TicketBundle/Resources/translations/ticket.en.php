@@ -51,6 +51,11 @@ return array(
     'non_member'                                   => 'Non Member',
     'member'                                       => 'Member',
     'default'                                      => 'Default',
+    'Sell'                                         => 'Sell',
+    'Sale'                                         => 'Sale',
+    'Are you sure you want to sell the ticket of'  => 'Are you sure you want to sell the ticket of',
+
+
 
 
     'The tickets were succesfully booked'     => 'The tickets were succesfully booked',
