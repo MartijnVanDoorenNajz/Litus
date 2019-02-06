@@ -17,12 +17,9 @@
  *
  * @license http://litus.cc/LICENSE
  */
-
 namespace TicketBundle\Component\Validator;
-
 use CommonBundle\Component\Form\Form;
 use CommonBundle\Component\Validator\FormAwareInterface;
-
 /**
  * Check whether number of member + number of non member does not exceed max
  *
@@ -33,17 +30,14 @@ class NumberTickets extends \CommonBundle\Component\Validator\AbstractValidator 
     const NOT_VALID = 'notValid';
     const EXCEEDS_MAX_PERSON = 'exceedsMaxPerson';
     const EXCEEDS_MAX = 'exceedsMax';
-
     protected $options = array(
         'event'  => null,
         'person' => null,
     );
-
     /**
      * @var Form
      */
     private $form;
-
     /**
      * Error messages
      *
@@ -54,7 +48,6 @@ class NumberTickets extends \CommonBundle\Component\Validator\AbstractValidator 
         self::EXCEEDS_MAX_PERSON => 'The number of tickets exceeds the maximum per person',
         self::EXCEEDS_MAX        => 'The number of tickets exceeds the maximum',
     );
-
     /**
      * Sets validator options
      *
@@ -68,10 +61,8 @@ class NumberTickets extends \CommonBundle\Component\Validator\AbstractValidator 
             $options['event'] = array_shift($args);
             $options['person'] = array_shift($args);
         }
-
         parent::__construct($options);
     }
-
     /**
      * Returns true if these does not exceed max
      *
@@ -82,9 +73,7 @@ class NumberTickets extends \CommonBundle\Component\Validator\AbstractValidator 
     public function isValid($value, $context = null)
     {
         $this->setValue($value);
-
         $optionsForm = $this->form->has('options_form') ? $this->form->get('options_form') : $this->form;
-
         $number = 0;
         if ($this->options['event']->getOptions()->isEmpty()) {
             $number += $optionsForm->get('number_member')->getValue();
@@ -100,13 +89,10 @@ class NumberTickets extends \CommonBundle\Component\Validator\AbstractValidator 
                 }
             }
         }
-
         if ($number == 0) {
             $this->error(self::NOT_VALID);
-
             return false;
         }
-
         $personFieldset = $this->form->get('person_form');
         if ($this->options['person'] == null && is_numeric($personFieldset->get('person')->getValue())) {
             $person = $this->getEntityManager()
@@ -115,34 +101,25 @@ class NumberTickets extends \CommonBundle\Component\Validator\AbstractValidator 
         } else {
             $person = $this->options['person'];
         }
-
         if ($person === null && !$this->form->get('is_guest')->getValue()) {
             $this->error(self::NOT_VALID);
-
             return false;
         }
-
         if ($person !== null) {
             $tickets = $this->getEntityManager()
                 ->getRepository('TicketBundle\Entity\Ticket')
                 ->findAllByEventAndPerson($this->options['event'], $person);
-
             if ($number + count($tickets) > $this->options['event']->getLimitPerPerson() && $this->options['event']->getLimitPerPerson() != 0) {
                 $this->error(self::EXCEEDS_MAX_PERSON);
-
                 return false;
             }
         }
-
         if ($number > $this->options['event']->getNumberFree() && $this->options['event']->getNumberOfTickets() != 0) {
             $this->error(self::EXCEEDS_MAX);
-
             return false;
         }
-
         return true;
     }
-
     /**
      * @param  Form $form
      * @return self
@@ -150,7 +127,6 @@ class NumberTickets extends \CommonBundle\Component\Validator\AbstractValidator 
     public function setForm(Form $form)
     {
         $this->form = $form;
-
         return $this;
     }
 }

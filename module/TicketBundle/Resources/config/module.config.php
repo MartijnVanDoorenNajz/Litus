@@ -17,11 +17,8 @@
  *
  * @license http://litus.cc/LICENSE
  */
-
 namespace TicketBundle;
-
 use CommonBundle\Component\Module\Config;
-
 return Config::create(
     array(
         'namespace'         => __NAMESPACE__,
@@ -33,7 +30,9 @@ return Config::create(
         'validators' => array(
             'aliases' => array(
                 'activtiy'          => Component\Validator\Activity::class,
+                'activity'          => Component\Validator\Activity::class,
                 'Activtiy'          => Component\Validator\Activity::class,
+                'Activity'          => Component\Validator\Activity::class,
                 'bookingsclosedate' => Component\Validator\BookingsCloseDate::class,
                 'bookingsCloseDate' => Component\Validator\BookingsCloseDate::class,
                 'BookingsCloseDate' => Component\Validator\BookingsCloseDate::class,

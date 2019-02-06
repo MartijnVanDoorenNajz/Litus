@@ -36,7 +36,7 @@
                         <td>{{ event.getActivity().getTitle(language) }}</td>
                         <td>{{ event.getBookingsCloseDate().format('d/m/Y H:i') }}</td>
                         <td>{% if event.isActive() %}&times;{% endif %}</td>
-                        <td>{{ event.getNumberSold() }}</td>
+                        <td>{{ event.getNumberSold(entityManager) }}</td>
                         <td class="actions">
                             {% if hasAccess('ticket_admin_event', 'edit') %}
                                 <a href="{{ url('ticket_admin_event', {"action": "edit", "id": event.getId()}) }}" class="edit">Edit</a></li>

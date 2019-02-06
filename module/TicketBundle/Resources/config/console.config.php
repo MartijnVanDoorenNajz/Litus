@@ -17,7 +17,6 @@
  *
  * @license http://litus.cc/LICENSE
  */
-
 return array(
     'install_ticket' => 'TicketBundle\Command\Install',
 );

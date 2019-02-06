@@ -29,7 +29,9 @@ return array(
     'Book Date'                                    => 'Book Date',
     'Sold Date'                                    => 'Sold Date',
     'Booked'                                       => 'Booked',
+    'booked'                                       => 'Booked',
     'Sold'                                         => 'Sold',
+    'sold'                                         => 'Sold',
     'Book Tickets'                                 => 'Book Tickets',
     'Remove'                                       => 'Remove',
     'The ticket was succesfully deleted.'          => 'The ticket was succesfully deleted.',
@@ -40,6 +42,21 @@ return array(
     'No'                                           => 'No',
     'Number Member'                                => 'Number Member',
     'Number Non Member'                            => 'Number Non Member',
+    'R-number'                                     => 'R-number',
+    'Guest tickets'                                => 'Guest tickets',
+    'Your ticket'                                  => 'Your ticket',
+    'praesidium'                                   => 'Praesidium',
+    'supportive_member'                            => 'Supportive Member',
+    'honorary_member'                              => 'Honorary Member',
+    'non_member'                                   => 'Non Member',
+    'member'                                       => 'Member',
+    'default'                                      => 'Default',
+    'Sell'                                         => 'Sell',
+    'Sale'                                         => 'Sale',
+    'Are you sure you want to sell the ticket of'  => 'Are you sure you want to sell the ticket of',
+
+
+
 
     'The tickets were succesfully booked'     => 'The tickets were succesfully booked',
     'There were not enough tickets available' => 'There were not enough tickets available',

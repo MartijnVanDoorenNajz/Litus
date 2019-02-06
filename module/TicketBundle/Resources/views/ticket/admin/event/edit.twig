@@ -69,54 +69,210 @@
 {% block content_script %}
     <script type="text/javascript">
         var currentCount = 0;
-        $(document).ready(function () {
-            while ($('input[name="options[' + (currentCount) + '][option]"]').length) {
-                currentCount++;
+        var allCategories;
+        var categories;
+
+        var regex = /prices_options_form\[([0-9]+)\]\[same_price\]/g;
+
+        $(document).ready(function() {
+            allCategories = [];
+            $("#bookable_categories > option").each(function(){
+                allCategories.push(this.value);
+            });
+
+            categories = $('#bookable_categories').val();
+
+            var bases = ['#booking_open_date_@', '#booking_close_date_@', '#max_nb_tickets_@', '#nb_guests_@', '#price_@'];
+            for (var i = 0; i < bases.length; ++i) {
+                hideCategories(bases[i], allCategories);
             }
 
-            if ($('#enable_options_hidden').val() && !$('#enable_options').is(':checked'))
-                $('#enable_options').prop('checked', true);
 
-            $('#only_members').change(function () {
-                if ($(this).is(':checked')) {
-                    $('form .price_non_members').closest('.row').hide();
+            // Count the amount of options already available
+            while ($('fieldset[name="prices_options_form[' + currentCount + ']"]').length) {
+                ++currentCount;
+            }
+
+            // Check for changes in categories
+            $('#bookable_categories').change(function() {
+                var newCategories = $(this).val();
+
+                if (!$('#sameOpenDate').is(':checked')) {
+                    var base = '#booking_open_date_@';
+                    hideCategories(base, categories);
+                    showCategories(base, newCategories)
+                }
+
+                if (!$('#sameCloseDate').is(':checked')) {
+                    var base = '#booking_close_date_@';
+                    hideCategories(base, categories);
+                    showCategories(base, newCategories)
+                }
+
+                if (!$('#totalAcrossAll').is(':checked')) {
+                    var base = '#max_nb_tickets_@';
+                    hideCategories(base, categories);
+                    showCategories(base, newCategories)
+                }
+
+                if (!$('#sameAmountGuests').is(':checked')) {
+                    var base = '#nb_guests_@';
+                    hideCategories(base, categories);
+                    showCategories(base, newCategories)
+                }
+
+                if (!$('#same_price').is(':checked')) {
+                    var base = '#price_@';
+                    hideCategories(base, categories);
+                    showCategories(base, newCategories);
+                }
+
+                for (var i = 0; i < currentCount; ++i) {
+                    if (!$('input[name="prices_options_form[' + currentCount + '][same_price]"]').is(':checked')) {
+                        var base = 'input[name="prices_options_form[' + i + '][price_@]"]';
+                        hideCategories(base, categories);
+                        showCategories(base, newCategories);
+                    }
+                }
+
+                categories = newCategories;
+            }).trigger('change');
+
+            for (var i  = 0; i < currentCount; ++i) {
+                hideCategories('input[name="prices_options_form[' + i + '][price_@]"]', allCategories);
+                addSamePriceOptionTrigger(i);
+            }
+
+            // Check for ticking of sameOpenDate
+            $('#sameOpenDate').change(function() {
+                var base = '#booking_open_date_@';
+                if ($(this).is(":checked")) {
+                    $('#booking_open_date').closest('.row').show();
+                    hideCategories(base, categories);
                 } else {
-                    $('form .price_non_members').closest('.row').show();
+                    $('#booking_open_date').closest('.row').hide();
+                    showCategories(base, categories);
                 }
             }).trigger('change');
 
-            $('#enable_options').change(function () {
-                if ($(this).is(':checked')) {
-                    $('#prices').hide();
-                    $('#options').show();
-
-                    addOption();
+            // Check for ticking of sameCloseDate
+            $('#sameCloseDate').change(function() {
+                var base = '#booking_close_date_@';
+                if ($(this).is(":checked")) {
+                    $('#booking_close_date').closest('.row').show();
+                    hideCategories(base, categories);
                 } else {
-                    $('#prices').show();
-                    $('#options').hide();
+                    $('#booking_close_date').closest('.row').hide();
+                    showCategories(base, categories);
+                }
+            }).trigger('change');
+
+            // Check for ticking of totalAcrossAll
+            $('#totalAcrossAll').change(function() {
+                var base = '#max_nb_tickets_@';
+                if ($(this).is(":checked")) {
+                    $('#max_nb_tickets').closest('.row').show();
+                    hideCategories(base, categories);
+                } else {
+                    $('#max_nb_tickets').closest('.row').hide();
+                    showCategories(base, categories);
+                }
+            }).trigger('change');
+
+            // Check for ticking sameAmountGuests
+            $('#sameAmountGuests').change(function() {
+                var base = '#nb_guests_@';
+                if ($(this).is(":checked")) {
+                    $('#nb_guests').closest('.row').show();
+                    hideCategories(base, categories);
+                } else {
+                    $('#nb_guests').closest('.row').hide();
+                    showCategories(base, categories);
+                }
+            }).trigger('change');
+
+            // Check for ticking enable_options
+            $('#enable_options').change(function() {
+                if ($(this).is(':checked')) {
+                    $('#prices_single_form').hide();
+                    $('#prices_options_form').show();
+
+                    if (currentCount == 0) {
+                        addOption();
+                    } else {
+                        console.log(currentCount);
+                        $('input[name="prices_options_form[' + (currentCount - 1) + '][name]"]').keyup(triggerKeyUp);
+                    }
+                } else {
+                    $('#prices_single_form').show();
+                    $('#prices_options_form').hide();
+                    $('input[name="prices_options_form[' + (currentCount - 1) + '][name]"]').unbind('keyup');
+
+                }
+            }).trigger('change');
+
+            // Check for ticking same_price
+            $('#same_price').change(function() {
+                var base = '#price_@';
+                if ($(this).is(':checked')) {
+                    $('#price').closest('.row').show();
+                    hideCategories(base, categories);
+                } else {
+                    $('#price').closest('.row').hide();
+                    showCategories(base, categories);
                 }
             }).trigger('change');
         });
+
+        // Show all selected categories
+        function showCategories(baseID, categories) {
+            for (var i = 0; i < categories.length; ++i) {
+                $(baseID.replace(/@/g, categories[i])).closest('.row').show();
+            }
+        }
+
+        // Hide all selected categories
+        function hideCategories(baseID, categories) {
+            for (var i = 0; i < categories.length; ++i) {
+                $(baseID.replace(/@/g, categories[i])).closest('.row').hide();
+            }
+        }
+
+
+        // Add a new option
+        function addOption() {
+            var template = $('#data-template-prices_options_form').data('template');
+            template = template.replace(/__index__/g, currentCount);
+
+            $('form > fieldset#prices_options_form').append(template);
+            $('input[name="prices_options_form[' + currentCount + '][name]"]').keyup(triggerKeyUp);
+            hideCategories('input[name="prices_options_form[' + currentCount + '][price_@]"]', allCategories);
+
+            addSamePriceOptionTrigger(currentCount);
+
+            ++currentCount;
+        }
+
+        function addSamePriceOptionTrigger(currentCount) {
+            $('input[name="prices_options_form[' + currentCount + '][same_price]"]').change(function() {
+                var count = regex.exec($(this).attr('name'))[1];
+                regex.lastIndex = 0;
+
+                var base = 'input[name="prices_options_form[' + count + '][price_@]"]';
+                if ($(this).is(':checked')) {
+                    $('input[name="prices_options_form[' + count + '][price]"]').closest('.row').show();
+                    hideCategories(base, categories);
+                } else {
+                    $('input[name="prices_options_form[' + count + '][price]"]').closest('.row').hide();
+                    showCategories(base, categories);
+                }
+            }).trigger('change');
+        }
 
         function triggerKeyUp() {
             if ($(this).val().length > 0) {
                 $(this).unbind('keyup');
                 addOption();
-            }
-        }
-
-        function addOption() {
-            var template = $('#data-template-options').data('template');
-            template = template.replace(/__index__/g, currentCount);
-            currentCount++;
-
-            $('form > fieldset#options').append(template);
-            $('input[name="options[' + (currentCount - 1) + '][option]"]').keyup(triggerKeyUp);
-
-            if ($('#only_members').is(':checked')) {
-                $('form .price_non_members').closest('.row').hide();
-            } else {
-                $('form .price_non_members').show();
             }
         }
     </script>

@@ -38,8 +38,7 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
 {
     public function manageAction()
     {
-        $event = $this->getEventEntity();
-        if ($event === null) {
+        if (!($event = $this->getEventEntity())) {
             return new ViewModel();
         }
 
@@ -48,9 +47,16 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
         }
 
         if (!isset($tickets)) {
-            $tickets = $this->getEntityManager()
-                ->getRepository('TicketBundle\Entity\Ticket')
-                ->findAllActiveByEvent($event);
+            $orders = $this->getEntityManager()
+                ->getRepository('TicketBundle\Entity\OrderEntity')
+                ->findAllByEvent($event);
+        }
+
+        $tickets = array();
+        foreach ($orders as $order) {
+            foreach ($order->getTickets() as $ticket) {
+                $tickets[] = $ticket;
+            }
         }
 
         $paginator = $this->paginator()->createFromArray(
@@ -69,8 +75,7 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
 
     public function exportAction()
     {
-        $event = $this->getEventEntity();
-        if ($event === null) {
+        if (!($event = $this->getEventEntity())) {
             return new ViewModel();
         }
 
@@ -99,8 +104,7 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
 
     public function printAction()
     {
-        $event = $this->getEventEntity();
-        if ($event === null) {
+        if (!($event = $this->getEventEntity())) {
             return new ViewModel();
         }
 
@@ -131,8 +135,7 @@ class TicketController extends \CommonBundle\Component\Controller\ActionControll
     {
         $this->initAjax();
 
-        $event = $this->getEventEntity();
-        if ($event === null) {
+        if (!($event = $this->getEventEntity())) {
             return new ViewModel();
         }
 

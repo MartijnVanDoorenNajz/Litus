@@ -20,6 +20,7 @@
 
 namespace TicketBundle\Form\Ticket;
 
+use CommonBundle\Entity\General\AcademicYear;
 use CommonBundle\Entity\User\Person;
 use LogicException;
 use RuntimeException;
@@ -32,6 +33,36 @@ use TicketBundle\Entity\Event;
  */
 class Book extends \CommonBundle\Component\Form\Bootstrap\Form
 {
+    private $guest_template = array(
+        'type'      => 'fieldset',
+        'name'      => 'guest_form_',
+        'label'     => ' ',
+        'elements'  => array(
+            array(
+                'type'  => 'text',
+                'name'  => 'r-number',
+                'label' => 'R-number',
+                'options'  => array(
+                    'input' => array(
+                        'filters' => array(
+                            array('name' => 'StringTrim'),
+                        ),
+                    ),
+                ),
+            ),
+            array(
+                'type'      => 'select',
+                'name'      => 'options_select',
+                'label'     => 'Option',
+                'attributes' => array(),
+            ),
+        ),
+    );
+
+    const DEFAULT_CATEGORY = 'non_member';
+
+    protected $hydrator = 'TicketBundle\Hydrator\Order';
+
     /**
      * @var Event
      */
@@ -41,6 +72,11 @@ class Book extends \CommonBundle\Component\Form\Bootstrap\Form
      * @var Person
      */
     private $person;
+
+    /**
+     * @var AcademicYear
+     */
+    private $currentYear;
 
     public function init()
     {
@@ -55,127 +91,79 @@ class Book extends \CommonBundle\Component\Form\Bootstrap\Form
 
         $this->setAttribute('id', 'ticket_sale_form');
 
-        if ($this->event->getOptions()->isEmpty()) {
+        $status = $this->person->getOrganizationStatus($this->currentYear);
+        $bookerCategory = $this->event->getBookingCategoryByStatus($status);
+        if ($bookerCategory === null) {
+            throw new RuntimeException('This category cannot book tickets.');
+        }
+        
+
+        $this->add(
+            array(
+                'type'       => 'fieldset',
+                'name'       => 'bookers_form',
+                'label'      => 'Your ticket',
+                'elements'   => array(
+                    array(
+                        'type'      => 'select',
+                        'name'      => 'options_select',
+                        'label'     => 'Option',
+                        'required'  => true,
+                        'attributes' => array(
+                            'options' => $this->createOptionsArray($bookerCategory),
+                        ),
+                    ),
+                ),
+            )
+        );
+
+        $max_nb_guests = $bookerCategory->getMaxAmountGuests();
+        if ($max_nb_guests > 0) {
             $this->add(
                 array(
-                    'type'       => 'select',
-                    'name'       => 'number_member',
-                    'label'      => 'Number Member',
-                    'attributes' => array(
-                        'options' => $this->getNumberOptions(),
-                    ),
-                    'options' => array(
-                        'input' => array(
-                            'required'   => true,
-                            'validators' => array(
-                                array(
-                                    'name'    => 'NumberTickets',
-                                    'options' => array(
-                                        'event'  => $this->event,
-                                        'person' => $this->person,
-                                    ),
-                                ),
-                            ),
-                        ),
-                    ),
+                    'type'      => 'fieldset',
+                    'name'      => 'guest_form',
+                    'label'     => 'Guest tickets',
+                    'elements'  => $this->getGuestArray($max_nb_guests),
                 )
             );
-
-            if (!$this->event->isOnlyMembers()) {
-                $this->add(
-                    array(
-                        'type'       => 'select',
-                        'name'       => 'number_non_member',
-                        'label'      => 'Number Non Member',
-                        'attributes' => array(
-                            'options' => $this->getNumberOptions(),
-                        ),
-                        'options' => array(
-                            'input' => array(
-                                'required'   => true,
-                                'validators' => array(
-                                    array(
-                                        'name'    => 'NumberTickets',
-                                        'options' => array(
-                                            'event'  => $this->event,
-                                            'person' => $this->person,
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    )
-                );
-            }
-        } else {
-            foreach ($this->event->getOptions() as $option) {
-                $this->add(
-                    array(
-                        'type'       => 'select',
-                        'name'       => 'option_' . $option->getId() . '_number_member',
-                        'label'      => ucfirst($option->getName()) . ' (Member)',
-                        'attributes' => array(
-                            'options' => $this->getNumberOptions(),
-                        ),
-                        'options' => array(
-                            'input' => array(
-                                'required'   => true,
-                                'validators' => array(
-                                    array(
-                                        'name'    => 'NumberTickets',
-                                        'options' => array(
-                                            'event'  => $this->event,
-                                            'person' => $this->person,
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ),
-                    )
-                );
-
-                if (!$this->event->isOnlyMembers()) {
-                    $this->add(
-                        array(
-                            'type'       => 'select',
-                            'name'       => 'option_' . $option->getId() . '_number_non_member',
-                            'label'      => ucfirst($option->getName()) . ' (Non Member)',
-                            'attributes' => array(
-                                'options' => $this->getNumberOptions(),
-                            ),
-                            'options' => array(
-                                'input' => array(
-                                    'required'   => true,
-                                    'validators' => array(
-                                        array(
-                                            'name'    => 'NumberTickets',
-                                            'options' => array(
-                                                'event'  => $this->event,
-                                                'person' => $this->person,
-                                            ),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        )
-                    );
-                }
-            }
         }
 
         $this->addSubmit('Book', 'book_tickets');
     }
 
-    private function getNumberOptions()
+    private function createOptionsArray($category)
     {
-        $numbers = array();
-        $max = $this->event->getLimitPerPerson() == 0 ? 10 : $this->event->getLimitPerPerson();
-
-        for ($i = 0; $i <= $max; $i++) {
-            $numbers[$i] = $i;
+        if ($category == null) {
+            $category = $this->event->getBookingCategories()[0];
         }
 
-        return $numbers;
+        $options = array();
+        foreach ($category->getOptions() as $option) {
+            $options[] = $option->getName();
+        }
+        return $options;
+    }
+
+    private function getGuestArray($amount)
+    {
+        if ($amount <= 0) {
+            return array();
+        }
+
+        $array = array();
+
+        $options = $this->createOptionsArray(null);
+        for ($i = 0; $i < $amount; ++$i) {
+            $field = $this->guest_template;
+            $field['name'] .= $i;
+            $field['elements'][1]['attributes']['options'] = $options;
+            $array[] = $field;
+        }
+
+        $array[0]['label'] = '';
+
+        return $array;
     }
 
     /**
@@ -196,6 +184,17 @@ class Book extends \CommonBundle\Component\Form\Bootstrap\Form
     public function setPerson(Person $person)
     {
         $this->person = $person;
+
+        return $this;
+    }
+
+    /**
+     * @param AcademicYear $year
+     * @return self
+     */
+    public function setCurrentYear(AcademicYear $year)
+    {
+        $this->currentYear = $year;
 
         return $this;
     }

@@ -20,6 +20,7 @@
 
 namespace TicketBundle\Form\Admin\Event;
 
+use LogicException;
 use TicketBundle\Entity\Event;
 
 /**
@@ -32,25 +33,29 @@ class Edit extends \TicketBundle\Form\Admin\Event\Add
     /**
      * @var Event
      */
-    private $event;
+//    private $event;
 
     public function init()
     {
-        parent::init();
-
-        $events = $this->createEventsArray();
-        $events[$this->event->getActivity()->getId()] = $this->event->getActivity()->getTitle();
-        $this->get('event')->setAttribute('options', $events);
-
-        if (!$this->event->getOptions()->isEmpty()) {
-            $this->get('enable_options')
-                ->setAttribute('disabled', true);
+        if ($this->event === null) {
+            throw new LogicException('No event given to edit');
         }
 
-        $this->remove('submit')
-            ->addSubmit('Save', 'edit');
+        parent::init();
 
-        $this->bind($this->event);
+//        $events = $this->createEventsArray();
+//        $events[$this->event->getActivity()->getId()] = $this->event->getActivity()->getTitle();
+//        $this->get('event')->setAttribute('options', $events);
+//
+//        if (!$this->event->getOptions()->isEmpty()) {
+//            $this->get('enable_options')
+//                ->setAttribute('disabled', true);
+//        }
+
+        $this->remove('submit');
+        $this->addSubmit('Save', 'edit');
+
+//        $this->bind($this->event);
     }
 
     public function getInputFilterSpecification()
@@ -61,7 +66,7 @@ class Edit extends \TicketBundle\Form\Admin\Event\Add
             if (isset($spec['name']) && $spec['name'] == 'event') {
                 $specs[$key]['validators'] = array(
                     array(
-                        'name'    => 'Activity',
+                        'name'    => 'activtiy',
                         'options' => array(
                             'exclude' => $this->event,
                         ),
@@ -73,15 +78,14 @@ class Edit extends \TicketBundle\Form\Admin\Event\Add
 
         return $specs;
     }
-
-    /**
-     * @param  \TicketBundle\Entity\Event $event
-     * @return self
-     */
-    public function setEvent(Event $event)
-    {
-        $this->event = $event;
-
-        return $this;
-    }
+//    /**
+//     * @param  \TicketBundle\Entity\Event $event
+//     * @return self
+//     */
+//    public function setEvent(Event $event)
+//    {
+//        $this->event = $event;
+//
+//        return $this;
+//    }
 }

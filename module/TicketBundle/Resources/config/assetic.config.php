@@ -17,11 +17,8 @@
  *
  * @license http://litus.cc/LICENSE
  */
-
 namespace TicketBundle;
-
 use CommonBundle\Component\Assetic\Filter\Less as LessFilter;
-
 return array(
     'controllers' => array(
         'ticket_admin_event' => array(
@@ -75,7 +72,6 @@ return array(
             '@bootstrap_js_alert',
         ),
     ),
-
     'collections' => array(
         'ticket_css' => array(
             'assets' => array(

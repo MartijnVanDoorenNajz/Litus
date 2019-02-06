@@ -43,6 +43,7 @@ class EventController extends \CommonBundle\Component\Controller\ActionControlle
             array(
                 'paginator'         => $paginator,
                 'paginationControl' => $this->paginator()->createControl(true),
+                'entityManager'     => $this->getEntityManager(),
             )
         );
     }
@@ -73,6 +74,7 @@ class EventController extends \CommonBundle\Component\Controller\ActionControlle
 
             if ($form->isValid()) {
                 $event = $form->hydrateObject();
+                $event->setActive(true);
 
                 $this->getEntityManager()->persist($event);
                 $this->getEntityManager()->flush();
@@ -102,8 +104,7 @@ class EventController extends \CommonBundle\Component\Controller\ActionControlle
 
     public function editAction()
     {
-        $event = $this->getEventEntity();
-        if ($event === null) {
+        if (!($event = $this->getEventEntity())) {
             return new ViewModel();
         }
 
@@ -144,8 +145,7 @@ class EventController extends \CommonBundle\Component\Controller\ActionControlle
     {
         $this->initAjax();
 
-        $event = $this->getEventEntity();
-        if ($event === null) {
+        if (!($event = $this->getEventEntity())) {
             return new ViewModel();
         }
 
