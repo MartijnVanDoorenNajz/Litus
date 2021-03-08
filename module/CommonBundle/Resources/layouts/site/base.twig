@@ -533,8 +533,9 @@
         </div>
     </header> #}
 
-    <div id="page">
-        <div id="content" class="container">
+    <div>
+        {# !!! CONTAINER REMOVED, NEED TO BE CHECKED ON EVERY PAGE #}
+        <div id="content">
             {% include 'site/partials/flashMessenger.twig' %}
 
             {% block content %} {% endblock %}
@@ -542,8 +543,8 @@
     </div>
 
 {# Footer #}
-    <footer style="margin-bottom: 0px; position: relative">
-        <div style="background-color: whitesmoke; margin-top: 100px; padding: 50px 0px">
+    <footer style="margin-bottom: 0px; margin-top:50px; position: relative">
+        <div style="background-color: whitesmoke; padding: 50px 0px">
             <div class="container" style="text-align: left">
                 <h3>{{ translate('Partners') }}</h3>
                 {% for logo in logos %}
