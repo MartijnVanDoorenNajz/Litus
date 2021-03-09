@@ -1,5 +1,38 @@
 .calendarBrowser {
-    .calendarColumn {
-        min-height: 100px;
-    }
+  .calendarRow {
+    margin-bottom: 10px; 
+  }
+}
+
+.calendarItemHolder {
+  display: inline-block; 
+  padding: 10px; 
+}
+
+
+// Need !important here because gets overriden by bootstrap because of JS file 
+.calendarButton {
+  color: #1a1f4a;
+  border: 1px solid #1a1f4a !important;
+  padding: 10px 20px !important;
+  background-color: transparent !important;
+  transition-duration: 200ms;
+  border-radius: 0px !important; 
+  font-family: 'Open Sans' !important; 
+  font-size: 14px !important; 
+  cursor: pointer !important; 
+}
+
+.calendarButton:hover {
+  background-color: #1a1f4a !important;
+  color: white !important;
+}
+
+.calendarImagePlaceHolder {
+  width: 100%;
+  background-image: url(https://picsum.photos/400/275); 
+  min-height: 200px; 
+  background-position: center; 
+  background-size: cover; 
+  margin-bottom: 10px; 
 }
