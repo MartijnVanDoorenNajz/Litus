@@ -77,7 +77,8 @@
             color: '#abcabc',
             length: 0,
             width: 4,
-            lines: 10
+            lines: 10, 
+            position: "relative", 
         }).attr('month', param);
         $.post($this.data('calendar').url + param, function (data) {
             var column = $this.find('.calendarRow[month="' + param + '"]');
@@ -90,9 +91,9 @@
             if (nestedEvents.length > 0) {
 
                 column.html('')
-                    .append(
-                        $('<h2>').html(data.month)
-                    );
+                .append(
+                    $('<h2>', {'style': 'width: 100%'}).html(data.month)
+                );
 
                 $.each(data.days, function (key, value) {
                     $(value.events).each(function () {
@@ -101,29 +102,17 @@
                             $('<div>', {'class': 'date'}).append(
                                 $('<div>').html(value.month + " " + value.day)
                             ),
-                            $('<div>').append(
-                                $('<h4>',
-                                    {
-                                        'href': this.url,
-                                        'rel': 'popover',
-                                        'data-original-title': this.title,
-                                        'data-content': $('<div>').append(
-                                            $('<small>').append(
-                                                $('<em>').append(
-                                                    $('<span>', {'class': 'glyphicon glyphicon-time time'}),
-                                                    ' ' + this.fullTime
-                                                )
-                                            ), 
-                                            $('<p>').html(this.content)
-                                        ).html()
-                                    }
-                                ).append(
-                                    this.title
-                                ),
-                                $('<button>', {'class': 'yellow unfilled', 'style': 'margin-bottom: 20px'}).append('Lees meer'),
-                                $('<div>', {'class': 'calendarImagePlaceHolder'}), 
-                                $('<p>', {}).append(this.summary)
-                            )
+                            $('<h4>',
+                                {
+                                    'class': 'calendarTitleStretch', 
+                                }
+                            ).append(
+                                this.title + " | " + value.month + " " + value.day
+                            ),
+                            $('<div>', {'class': 'button', 'style': 'margin-bottom: 20px; margin-top: 20px'}).append($('<a>').append('Lees meer')),
+                            $('<div>', {'class': 'calendarImagePlaceHolder'}), 
+                            $('<p>', {'style': 'min-height: 63px'}).append(this.summary)
+                            
                         )
                     );
 
@@ -158,7 +147,10 @@
                 
             }); 
         } else {
-            column.html('').append(''); 
+            column.html('')
+                .append(
+                    $('<h2>', {'style': 'width: 100%'}).html(data.month)
+                ); 
         }; 
 
             $('a[rel=popover]').popover({'trigger': 'hover', 'html': true, 'container': 'body'});
